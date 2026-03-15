@@ -118,9 +118,9 @@ body{font-family:'Inter',sans-serif;background:#0a0a0a;color:#fff;min-height:100
 <body>
 
 <div class="demo-switcher">
-  <button class="demo-switch active" onclick="showDemo('church')">⛪ Church</button>
-  <button class="demo-switch" onclick="showDemo('business')">🔧 Business</button>
-  <button class="demo-switch" onclick="showDemo('personal')">👤 Personal</button>
+  <button class="demo-switch active" onclick="showDemo('church')">🔥 Zeal</button>
+  <button class="demo-switch" onclick="showDemo('business')">🦸 AutoRepHero</button>
+  <button class="demo-switch" onclick="showDemo('personal')">👤 Chuck</button>
   <button class="demo-switch" onclick="showBuilder()" style="background:#22c55e;color:#000;border-color:#22c55e">✚ Create</button>
 </div>
 
@@ -203,69 +203,68 @@ body{font-family:'Inter',sans-serif;background:#0a0a0a;color:#fff;min-height:100
 <script>
 const DEMOS = {
   church: {
-    coverColor: '#1e3a5f',
-    coverGradient: 'linear-gradient(135deg, #1e3a5f 0%, #0d1b2a 100%)',
-    avatar: '⛪',
+    coverColor: '#1a1a2e',
+    coverGradient: 'linear-gradient(135deg, #e65100 0%, #1a1a2e 100%)',
+    avatar: '🔥',
     avatarType: 'icon',
-    name: 'Grace Community Church',
+    name: 'Zeal Church',
     title: 'Spokane, WA',
-    tagline: 'A place to belong. Join us every Sunday and experience community, worship, and hope.',
-    themeColor: '#3b82f6',
+    tagline: 'His Presence. His Power. His People. Join us Sundays at 11:30 AM — 159 S Lincoln St, Spokane.',
+    themeColor: '#e65100',
     actions: [
-      { icon: '📞', label: 'Call', href: 'tel:+15091234567' },
-      { icon: '📍', label: 'Directions', href: 'https://maps.google.com/?q=Grace+Community+Church+Spokane' },
-      { icon: '💬', label: 'Text', href: 'sms:+15091234567' },
-      { icon: '📧', label: 'Email', href: 'mailto:hello@gracecc.org' },
+      { icon: '📍', label: 'Directions', href: 'https://maps.google.com/?q=159+S+Lincoln+St+Spokane+WA' },
+      { icon: '📧', label: 'Email', href: 'mailto:info.zealchurchwa@gmail.com' },
+      { icon: '🌐', label: 'Website', href: 'https://www.zealchurchwa.com' },
     ],
     links: [
-      { icon: '🙏', bg: '#1a365d', label: 'Service Times', sub: 'Sunday 9am & 11am', href: '#' },
-      { icon: '▶️', bg: '#7c2d12', label: 'Watch Latest Sermon', sub: 'YouTube', href: 'https://youtube.com' },
-      { icon: '📘', bg: '#1e40af', label: 'Facebook', sub: 'Follow for updates & events', href: 'https://facebook.com' },
-      { icon: '🎵', bg: '#6b21a8', label: 'Worship Playlist', sub: 'Spotify', href: 'https://spotify.com' },
-      { icon: '💝', bg: '#166534', label: 'Give / Donate', sub: 'Support our mission', href: '#' },
-      { icon: '👋', bg: '#92400e', label: "I'm New Here", sub: 'What to expect on your first visit', href: '#' },
+      { icon: '🙏', bg: '#bf360c', label: 'Service Times', sub: 'Sundays at 11:30 AM', href: 'https://www.zealchurchwa.com' },
+      { icon: '▶️', bg: '#7c2d12', label: 'YouTube', sub: 'Watch sermons & worship', href: 'https://www.youtube.com/@zealchurchwa' },
+      { icon: '📘', bg: '#1e40af', label: 'Facebook', sub: 'Follow for updates & events', href: 'https://www.facebook.com/zealchurchwa' },
+      { icon: '📸', bg: '#86198f', label: 'Instagram', sub: 'Follow us', href: 'https://www.instagram.com/zealchurchwa' },
+      { icon: '💝', bg: '#166534', label: 'Give / Donate', sub: 'Support our mission', href: 'https://www.zealchurchwa.com' },
+      { icon: '👋', bg: '#92400e', label: "I'm New Here", sub: 'What to expect on your first visit', href: 'https://www.zealchurchwa.com' },
+      { icon: '👨‍👩‍👧‍👦', bg: '#4a148c', label: 'Our Pastors', sub: 'Ray & Shantel Valdez', href: 'https://www.zealchurchwa.com' },
     ],
     details: [
-      { icon: '📍', text: '1234 Grace Ave, Spokane, WA 99201' },
-      { icon: '🕐', text: 'Sundays 9:00 AM & 11:00 AM' },
-      { icon: '📞', text: '(509) 123-4567' },
-      { icon: '🌐', text: 'gracecommunitychurch.org' },
+      { icon: '📍', text: '159 S Lincoln St, Spokane, WA' },
+      { icon: '🕐', text: 'Sundays at 11:30 AM' },
+      { icon: '📧', text: 'info.zealchurchwa@gmail.com' },
+      { icon: '🌐', text: 'zealchurchwa.com' },
     ],
-    url: 'https://tap.autorephero.com/gracecc',
-    vcard: { fn: 'Grace Community Church', org: 'Grace Community Church', tel: '+15091234567', email: 'hello@gracecc.org', adr: '1234 Grace Ave, Spokane, WA 99201', url: 'https://gracecommunitychurch.org' }
+    url: 'https://tap.autorephero.com/zeal-church',
+    vcard: { fn: 'Zeal Church', org: 'Zeal Church', tel: '', email: 'info.zealchurchwa@gmail.com', adr: '159 S Lincoln St, Spokane, WA', url: 'https://www.zealchurchwa.com' }
   },
   business: {
-    coverColor: '#1a4731',
-    coverGradient: 'linear-gradient(135deg, #1a4731 0%, #0a1f14 100%)',
-    avatar: '🔧',
+    coverColor: '#0d3320',
+    coverGradient: 'linear-gradient(135deg, #22c55e 0%, #0d3320 100%)',
+    avatar: '🦸',
     avatarType: 'icon',
-    name: 'Evergreen Plumbing',
-    title: 'Licensed & Insured • Spokane, WA',
-    tagline: 'Fast, honest plumbing service for Spokane homes & businesses. Available 7 days a week.',
+    name: 'AutoRepHero',
+    title: 'Automated Reviews & Local SEO • Spokane, WA',
+    tagline: 'Get more reviews, rank higher, grow faster. The RAPID Hero Business Building System™ for small businesses.',
     themeColor: '#22c55e',
     actions: [
-      { icon: '📞', label: 'Call', href: 'tel:+15099876543' },
-      { icon: '📍', label: 'Directions', href: 'https://maps.google.com/?q=Evergreen+Plumbing+Spokane' },
-      { icon: '💬', label: 'Text', href: 'sms:+15099876543' },
-      { icon: '📋', label: 'Quote', href: '#' },
+      { icon: '📞', label: 'Call', href: 'tel:+15098180787' },
+      { icon: '💬', label: 'Text', href: 'sms:+15098180787' },
+      { icon: '📧', label: 'Email', href: 'mailto:chuck@autorephero.com' },
+      { icon: '🌐', label: 'Website', href: 'https://get.autorephero.com' },
     ],
     links: [
-      { icon: '⭐', bg: '#854d0e', label: 'Leave a Review', sub: 'Google • Yelp • Facebook', href: '#' },
-      { icon: '📘', bg: '#1e40af', label: 'Facebook', sub: 'Follow for tips & deals', href: 'https://facebook.com' },
-      { icon: '▶️', bg: '#7c2d12', label: 'YouTube', sub: 'DIY tips & project videos', href: 'https://youtube.com' },
-      { icon: '📸', bg: '#86198f', label: 'Instagram', sub: '@evergreenplumbing', href: 'https://instagram.com' },
-      { icon: '🌐', bg: '#1e3a5f', label: 'Website', sub: 'evergreenplumbing.com', href: '#' },
-      { icon: '🎁', bg: '#166534', label: 'Refer a Friend', sub: 'Get $25 off your next service', href: '#' },
+      { icon: '🚀', bg: '#166534', label: 'Start Free Trial', sub: '14-day RRDS trial', href: 'https://app.autorephero.com' },
+      { icon: '⭐', bg: '#854d0e', label: 'Review Hub Demo', sub: 'See it in action', href: 'https://app.autorephero.com/review' },
+      { icon: '📘', bg: '#1e40af', label: 'Facebook', sub: 'Follow AutoRepHero', href: 'https://facebook.com/autorephero' },
+      { icon: '▶️', bg: '#7c2d12', label: 'YouTube', sub: 'Tips & demos', href: 'https://youtube.com/@autorephero' },
+      { icon: '💼', bg: '#1e3a5f', label: 'LinkedIn', sub: 'Connect with us', href: 'https://linkedin.com/company/autorephero' },
+      { icon: '📋', bg: '#4c1d95', label: 'Schedule a Demo', sub: 'See how RAPID works', href: 'https://get.autorephero.com' },
     ],
     details: [
-      { icon: '📍', text: 'Serving all of Spokane & Spokane Valley' },
-      { icon: '🕐', text: 'Mon-Sun 7am - 7pm' },
-      { icon: '📞', text: '(509) 987-6543' },
-      { icon: '🌐', text: 'evergreenplumbing.com' },
-      { icon: '📜', text: 'License #EVERGP*835KA' },
+      { icon: '📍', text: 'Spokane, WA' },
+      { icon: '📞', text: '(509) 818-0787' },
+      { icon: '📧', text: 'chuck@autorephero.com' },
+      { icon: '🌐', text: 'get.autorephero.com' },
     ],
-    url: 'https://tap.autorephero.com/evergreen',
-    vcard: { fn: 'Evergreen Plumbing', org: 'Evergreen Plumbing', tel: '+15099876543', email: 'info@evergreenplumbing.com', adr: 'Spokane, WA', url: 'https://evergreenplumbing.com' }
+    url: 'https://tap.autorephero.com/autorephero',
+    vcard: { fn: 'AutoRepHero', org: 'AutoRepHero', tel: '+15098180787', email: 'chuck@autorephero.com', adr: 'Spokane, WA', url: 'https://get.autorephero.com' }
   },
   personal: {
     coverColor: '#2d1b69',
@@ -279,7 +278,7 @@ const DEMOS = {
     actions: [
       { icon: '📞', label: 'Call', href: 'tel:+15098180787' },
       { icon: '💬', label: 'Text', href: 'sms:+15098180787' },
-      { icon: '📧', label: 'Email', href: 'mailto:salesmadefaster@gmail.com' },
+      { icon: '📧', label: 'Email', href: 'mailto:chuck@autorephero.com' },
       { icon: '🌐', label: 'Website', href: 'https://get.autorephero.com' },
     ],
     links: [
@@ -291,11 +290,11 @@ const DEMOS = {
     details: [
       { icon: '📍', text: 'Spokane, WA' },
       { icon: '📞', text: '(509) 818-0787' },
-      { icon: '📧', text: 'salesmadefaster@gmail.com' },
+      { icon: '📧', text: 'chuck@autorephero.com' },
       { icon: '🌐', text: 'get.autorephero.com' },
     ],
     url: 'https://tap.autorephero.com/chuck',
-    vcard: { fn: 'Chuck Zaagsma', org: 'AutoRepHero', tel: '+15098180787', email: 'salesmadefaster@gmail.com', adr: 'Spokane, WA', url: 'https://get.autorephero.com' }
+    vcard: { fn: 'Chuck Zaagsma', org: 'AutoRepHero', tel: '+15098180787', email: 'chuck@autorephero.com', adr: 'Spokane, WA', url: 'https://get.autorephero.com' }
   }
 };
 
