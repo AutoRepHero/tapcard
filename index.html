@@ -332,7 +332,7 @@ function renderCard(d) {
       ${d.links.map(l => `<a class="link-item" href="${l.href}"><div class="link-icon" style="background:${l.bg}">${l.icon}</div><div class="link-text"><div class="label">${l.label}</div><div class="sub">${l.sub}</div></div><div class="link-arrow">›</div></a>`).join('')}
     </div>
     <div class="card-details">
-      ${d.details.map(dt => `<div class="detail-row"><span class="di">${dt.icon}</span>${dt.text}</div>`).join('')}
+      ${d.details.map(dt => `<div class="detail-row"><span class="di">${dt.icon}</span>${linkifyDetail(dt)}</div>`).join('')}
     </div>
     <div class="share-bar">
       <div style="text-align:center;padding:4px 8px;background:#111;border-radius:8px;margin-bottom:4px">
@@ -347,6 +347,29 @@ function renderCard(d) {
     </div>
     <div class="powered-by">Powered by <a href="https://autorephero.com">AutoRepHero</a></div>
   `;
+}
+
+function linkifyDetail(dt) {
+  const t = dt.text;
+  // Phone number
+  if (dt.icon === '📞') {
+    const digits = t.replace(/\D/g,'');
+    return `<a href="tel:+1${digits}" style="color:#aaa;text-decoration:none">${t}</a>`;
+  }
+  // Email
+  if (dt.icon === '📧') {
+    return `<a href="mailto:${t}" style="color:#aaa;text-decoration:none">${t}</a>`;
+  }
+  // Website
+  if (dt.icon === '🌐') {
+    const url = t.startsWith('http') ? t : 'https://' + t;
+    return `<a href="${url}" style="color:#aaa;text-decoration:none" target="_blank">${t}</a>`;
+  }
+  // Address
+  if (dt.icon === '📍') {
+    return `<a href="https://maps.google.com/?q=${encodeURIComponent(t)}" style="color:#aaa;text-decoration:none" target="_blank">${t}</a>`;
+  }
+  return t;
 }
 
 function shareCard(url, name) {
