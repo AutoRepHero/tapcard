@@ -269,8 +269,8 @@ const DEMOS = {
   personal: {
     coverColor: '#2d1b69',
     coverGradient: 'linear-gradient(135deg, #2d1b69 0%, #1a0a3e 100%)',
-    avatar: '👤',
-    avatarType: 'icon',
+    avatar: 'chuck.jpg',
+    avatarType: 'photo',
     name: 'Chuck Zaagsma',
     title: 'Founder, AutoRepHero',
     tagline: 'Helping small businesses get more reviews, rank higher, and grow faster.',
@@ -311,7 +311,10 @@ function renderCard(d) {
       <div class="card-cover-overlay"></div>
     </div>
     <div class="card-avatar-wrap">
-      <div class="card-avatar icon" style="background:${d.coverColor}">${d.avatar}</div>
+      ${d.avatarType==='photo'
+        ? `<div class="card-avatar" style="background:${d.coverColor}"><img src="${d.avatar}" alt="${d.name}"></div>`
+        : `<div class="card-avatar icon" style="background:${d.coverColor}">${d.avatar}</div>`
+      }
     </div>
     <div class="card-info">
       <div class="card-name">${d.name}</div>
