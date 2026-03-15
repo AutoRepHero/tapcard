@@ -231,7 +231,7 @@ const DEMOS = {
       { icon: '📞', text: '(509) 123-4567' },
       { icon: '🌐', text: 'gracecommunitychurch.org' },
     ],
-    url: 'https://tapcard.autorephero.com/gracecc',
+    url: 'https://tap.autorephero.com/gracecc',
     vcard: { fn: 'Grace Community Church', org: 'Grace Community Church', tel: '+15091234567', email: 'hello@gracecc.org', adr: '1234 Grace Ave, Spokane, WA 99201', url: 'https://gracecommunitychurch.org' }
   },
   business: {
@@ -264,7 +264,7 @@ const DEMOS = {
       { icon: '🌐', text: 'evergreenplumbing.com' },
       { icon: '📜', text: 'License #EVERGP*835KA' },
     ],
-    url: 'https://tapcard.autorephero.com/evergreen',
+    url: 'https://tap.autorephero.com/evergreen',
     vcard: { fn: 'Evergreen Plumbing', org: 'Evergreen Plumbing', tel: '+15099876543', email: 'info@evergreenplumbing.com', adr: 'Spokane, WA', url: 'https://evergreenplumbing.com' }
   },
   personal: {
@@ -294,7 +294,7 @@ const DEMOS = {
       { icon: '📧', text: 'salesmadefaster@gmail.com' },
       { icon: '🌐', text: 'get.autorephero.com' },
     ],
-    url: 'https://tapcard.autorephero.com/chuck',
+    url: 'https://tap.autorephero.com/chuck',
     vcard: { fn: 'Chuck Zaagsma', org: 'AutoRepHero', tel: '+15098180787', email: 'salesmadefaster@gmail.com', adr: 'Spokane, WA', url: 'https://get.autorephero.com' }
   }
 };
@@ -589,7 +589,7 @@ function generateCard() {
     actions: actions,
     links: links,
     details: details,
-    url: 'https://tapcard.autorephero.com/' + slug,
+    url: 'https://tap.autorephero.com/' + slug,
     vcard: { fn: name, org: name, tel: phone.replace(/\D/g,'').replace(/^(\d{10})$/,'+1$1'), email: email, adr: address, url: website }
   };
   
