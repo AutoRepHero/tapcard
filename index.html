@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>TapCard</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--radius:16px}
+body{font-family:'Inter',sans-serif;background:#0a0a0a;color:#fff;min-height:100vh;min-height:100dvh;overflow-x:hidden}
+.card-container{max-width:420px;margin:0 auto;min-height:100vh;min-height:100dvh;display:flex;flex-direction:column}
+
+/* Header / Cover */
+.card-cover{position:relative;height:180px;overflow:hidden}
+.card-cover img{width:100%;height:100%;object-fit:cover}
+.card-cover-overlay{position:absolute;inset:0;background:linear-gradient(transparent 40%,rgba(0,0,0,0.85))}
+
+/* Avatar */
+.card-avatar-wrap{display:flex;justify-content:center;margin-top:-50px;position:relative;z-index:2}
+.card-avatar{width:100px;height:100px;border-radius:50%;border:4px solid #1a1a1a;overflow:hidden;background:#222}
+.card-avatar img{width:100%;height:100%;object-fit:cover}
+.card-avatar.icon{display:flex;align-items:center;justify-content:center;font-size:48px}
+
+/* Info */
+.card-info{text-align:center;padding:12px 20px 0}
+.card-name{font-size:24px;font-weight:800;letter-spacing:-0.5px}
+.card-title{font-size:14px;color:#999;margin-top:2px;font-weight:400}
+.card-tagline{font-size:13px;color:#bbb;margin-top:8px;line-height:1.5;padding:0 10px}
+
+/* Quick Actions */
+.card-actions{display:flex;justify-content:center;gap:12px;padding:16px 20px}
+.action-btn{display:flex;flex-direction:column;align-items:center;gap:4px;text-decoration:none;color:#fff;width:70px}
+.action-btn .icon-circle{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;transition:transform 0.2s}
+.action-btn:active .icon-circle{transform:scale(0.92)}
+.action-btn span{font-size:10px;color:#999;font-weight:500}
+
+/* Links */
+.card-links{padding:8px 20px;display:flex;flex-direction:column;gap:8px}
+.link-item{display:flex;align-items:center;gap:12px;padding:14px 16px;background:#1a1a1a;border-radius:14px;text-decoration:none;color:#fff;transition:background 0.2s}
+.link-item:active{background:#252525}
+.link-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.link-text{flex:1}
+.link-text .label{font-size:14px;font-weight:600}
+.link-text .sub{font-size:11px;color:#888;margin-top:1px}
+.link-arrow{color:#555;font-size:14px}
+
+/* Details */
+.card-details{padding:16px 20px;display:flex;flex-direction:column;gap:6px}
+.detail-row{display:flex;align-items:center;gap:10px;font-size:13px;color:#aaa}
+.detail-row .di{width:20px;text-align:center}
+
+/* Share Bar */
+.share-bar{padding:16px 20px 24px;display:flex;flex-direction:column;gap:10px;margin-top:auto}
+.share-btn{width:100%;padding:16px;border:none;border-radius:14px;font-family:inherit;font-size:15px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:transform 0.2s}
+.share-btn:active{transform:scale(0.97)}
+.share-btn.primary{background:#fff;color:#000}
+.share-btn.secondary{background:#1a1a1a;color:#fff;border:1px solid #333}
+.share-btn.save{background:#22c55e;color:#fff}
+
+/* QR Modal */
+.qr-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.85);display:none;align-items:center;justify-content:center;z-index:100;backdrop-filter:blur(10px)}
+.qr-overlay.active{display:flex}
+.qr-modal{background:#fff;border-radius:24px;padding:32px;text-align:center;max-width:320px;width:90%}
+.qr-modal h3{color:#000;font-size:18px;margin-bottom:4px}
+.qr-modal p{color:#666;font-size:12px;margin-bottom:16px}
+.qr-modal canvas{border-radius:12px}
+.qr-close{margin-top:16px;padding:10px 32px;border:none;background:#000;color:#fff;border-radius:10px;font-family:inherit;font-weight:600;cursor:pointer}
+
+/* Demo Switcher */
+.demo-switcher{position:fixed;top:12px;right:12px;z-index:50;display:flex;gap:6px}
+.demo-switch{padding:6px 12px;border:1px solid #333;background:#1a1a1a;color:#fff;border-radius:8px;font-family:inherit;font-size:11px;font-weight:600;cursor:pointer}
+.demo-switch.active{background:#fff;color:#000;border-color:#fff}
+.powered-by{text-align:center;padding:8px;font-size:10px;color:#444}
+.powered-by a{color:#666;text-decoration:none}
+
+/* Builder */
+.builder{max-width:420px;margin:0 auto;padding:16px 20px;display:none;flex-direction:column;gap:12px}
+.builder.active{display:flex}
+.builder h2{font-size:20px;font-weight:800;text-align:center;margin:8px 0}
+.builder p.sub{font-size:12px;color:#888;text-align:center;margin-bottom:8px}
+.builder .search-wrap{position:relative}
+.builder .search-wrap input{width:100%;padding:14px 16px 14px 40px;background:#1a1a1a;border:1px solid #333;border-radius:12px;color:#fff;font-family:inherit;font-size:14px}
+.builder .search-wrap input:focus{outline:none;border-color:#3b82f6}
+.builder .search-wrap::before{content:'🔍';position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:16px}
+.builder .search-results{background:#1a1a1a;border:1px solid #333;border-radius:12px;max-height:200px;overflow-y:auto;display:none}
+.builder .search-results.active{display:block}
+.builder .search-result{padding:12px 16px;cursor:pointer;border-bottom:1px solid #222}
+.builder .search-result:hover,.builder .search-result:active{background:#252525}
+.builder .search-result .sr-name{font-size:14px;font-weight:600}
+.builder .search-result .sr-addr{font-size:11px;color:#888}
+.builder .divider{display:flex;align-items:center;gap:12px;color:#555;font-size:11px;text-transform:uppercase;letter-spacing:1px;margin:4px 0}
+.builder .divider::before,.builder .divider::after{content:'';flex:1;height:1px;background:#333}
+.builder .field{display:flex;flex-direction:column;gap:3px}
+.builder .field label{font-size:11px;color:#888;font-weight:500}
+.builder .field input,.builder .field select,.builder .field textarea{width:100%;padding:12px 14px;background:#1a1a1a;border:1px solid #333;border-radius:10px;color:#fff;font-family:inherit;font-size:13px}
+.builder .field input:focus,.builder .field select:focus,.builder .field textarea:focus{outline:none;border-color:#3b82f6}
+.builder .field textarea{resize:vertical;min-height:60px}
+.builder .field-row{display:flex;gap:8px}
+.builder .field-row .field{flex:1}
+.builder .section-label{font-size:12px;font-weight:700;color:#666;text-transform:uppercase;letter-spacing:0.5px;margin-top:8px}
+.builder .link-fields{display:flex;flex-direction:column;gap:6px}
+.builder .link-field{display:flex;flex-direction:column;gap:6px}
+.builder .link-field input{flex:1}
+.builder .link-field select{width:100%;flex-shrink:0;font-size:15px;padding:12px 8px}
+.builder .add-link{padding:10px;background:none;border:1px dashed #444;border-radius:10px;color:#888;font-family:inherit;cursor:pointer;font-size:12px}
+.builder .add-link:hover{border-color:#3b82f6;color:#3b82f6}
+.builder .generate-btn{padding:16px;background:#22c55e;color:#fff;border:none;border-radius:14px;font-family:inherit;font-size:16px;font-weight:700;cursor:pointer;margin-top:8px}
+.builder .generate-btn:active{transform:scale(0.97)}
+.builder .color-row{display:flex;gap:8px;flex-wrap:wrap}
+.builder .color-swatch{width:36px;height:36px;border-radius:50%;cursor:pointer;border:3px solid transparent;transition:border 0.2s}
+.builder .color-swatch.active{border-color:#fff}
+</style>
+</head>
+<body>
+
+<div class="demo-switcher">
+  <button class="demo-switch active" onclick="showDemo('church')">⛪ Church</button>
+  <button class="demo-switch" onclick="showDemo('business')">🔧 Business</button>
+  <button class="demo-switch" onclick="showDemo('personal')">👤 Personal</button>
+  <button class="demo-switch" onclick="showBuilder()" style="background:#22c55e;color:#000;border-color:#22c55e">✚ Create</button>
+</div>
+
+<div class="card-container" id="cardContainer"></div>
+
+<div class="builder" id="builder">
+  <h2>Create Your TapCard</h2>
+  <p class="sub">Search for your business or enter details manually</p>
+  
+  <div class="search-wrap">
+    <input type="text" id="bizSearch" placeholder="Search your business name..." oninput="searchBiz(this.value)">
+  </div>
+  <div class="search-results" id="searchResults"></div>
+  
+  <div class="divider">or enter manually</div>
+  
+  <div class="field">
+    <label>Card Type</label>
+    <select id="b_type" onchange="updateBuilderType()">
+      <option value="business">🔧 Business</option>
+      <option value="church">⛪ Church / Organization</option>
+      <option value="personal">👤 Personal</option>
+      <option value="realtor">🏠 Realtor</option>
+    </select>
+  </div>
+  
+  <div class="field"><label>Name</label><input type="text" id="b_name" placeholder="Business or person name"></div>
+  
+  <div class="field"><label>Title / Tagline</label><input type="text" id="b_title" placeholder="Licensed & Insured • Spokane, WA"></div>
+  
+  <div class="field"><label>Description</label><textarea id="b_desc" placeholder="Short description of what you do..."></textarea></div>
+  
+  <div class="field-row">
+    <div class="field"><label>Phone</label><input type="tel" id="b_phone" placeholder="(509) 555-1234" oninput="formatPhone(this)"></div>
+    <div class="field"><label>Email</label><input type="email" id="b_email" placeholder="you@email.com"></div>
+  </div>
+  
+  <div class="field"><label>Address</label><input type="text" id="b_address" placeholder="123 Main St, Spokane, WA"></div>
+  
+  <div class="field"><label>Website</label><input type="url" id="b_website" placeholder="https://yourbusiness.com"></div>
+
+  <div class="section-label">Theme Color</div>
+  <div class="color-row" id="colorRow">
+    <div class="color-swatch active" style="background:#3b82f6" onclick="pickColor('#3b82f6',this)"></div>
+    <div class="color-swatch" style="background:#22c55e" onclick="pickColor('#22c55e',this)"></div>
+    <div class="color-swatch" style="background:#ef4444" onclick="pickColor('#ef4444',this)"></div>
+    <div class="color-swatch" style="background:#f59e0b" onclick="pickColor('#f59e0b',this)"></div>
+    <div class="color-swatch" style="background:#8b5cf6" onclick="pickColor('#8b5cf6',this)"></div>
+    <div class="color-swatch" style="background:#ec4899" onclick="pickColor('#ec4899',this)"></div>
+    <div class="color-swatch" style="background:#14b8a6" onclick="pickColor('#14b8a6',this)"></div>
+    <div class="color-swatch" style="background:#fff" onclick="pickColor('#ffffff',this)"></div>
+  </div>
+  
+  <div class="section-label">Social & Links</div>
+  <div class="link-fields" id="linkFields">
+    <div class="link-field">
+      <select onchange="updateLinkPlaceholder(this)" style="font-size:15px;padding:12px 8px">
+        <option value="facebook">📘 Facebook</option><option value="instagram">📸 Instagram</option><option value="youtube">▶️ YouTube</option><option value="linkedin">💼 LinkedIn</option><option value="tiktok">🎵 TikTok</option><option value="google">⭐ Google Reviews</option><option value="yelp">⭐ Yelp</option><option value="website">🌐 Website</option><option value="other">🔗 Other</option>
+      </select>
+      <div style="display:flex;align-items:center;flex:1;background:#1a1a1a;border:1px solid #333;border-radius:10px;overflow:hidden">
+        <span class="link-prefix" style="padding:0 2px 0 10px;font-size:11px;color:#666;white-space:nowrap">facebook.com/</span>
+        <input type="text" placeholder="yourpage" style="border:none;background:transparent;padding:12px 10px 12px 0;flex:1;min-width:0">
+      </div>
+    </div>
+  </div>
+  <button class="add-link" onclick="addLinkField()" style="font-size:14px;padding:14px">+ Add another link</button>
+  
+  <button class="generate-btn" onclick="generateCard()">⚡ Generate My TapCard</button>
+</div>
+
+<div class="qr-overlay" id="qrOverlay" onclick="closeQR()">
+  <div class="qr-modal" onclick="event.stopPropagation()">
+    <h3 id="qrTitle">Scan to Connect</h3>
+    <p id="qrSub">Point your camera at the code</p>
+    <canvas id="qrCanvas"></canvas>
+    <br><button class="qr-close" onclick="closeQR()">Done</button>
+  </div>
+</div>
+
+<script>
+const DEMOS = {
+  church: {
+    coverColor: '#1e3a5f',
+    coverGradient: 'linear-gradient(135deg, #1e3a5f 0%, #0d1b2a 100%)',
+    avatar: '⛪',
+    avatarType: 'icon',
+    name: 'Grace Community Church',
+    title: 'Spokane, WA',
+    tagline: 'A place to belong. Join us every Sunday and experience community, worship, and hope.',
+    themeColor: '#3b82f6',
+    actions: [
+      { icon: '📞', label: 'Call', href: 'tel:+15091234567' },
+      { icon: '📍', label: 'Directions', href: 'https://maps.google.com/?q=Grace+Community+Church+Spokane' },
+      { icon: '💬', label: 'Text', href: 'sms:+15091234567' },
+      { icon: '📧', label: 'Email', href: 'mailto:hello@gracecc.org' },
+    ],
+    links: [
+      { icon: '🙏', bg: '#1a365d', label: 'Service Times', sub: 'Sunday 9am & 11am', href: '#' },
+      { icon: '▶️', bg: '#7c2d12', label: 'Watch Latest Sermon', sub: 'YouTube', href: 'https://youtube.com' },
+      { icon: '📘', bg: '#1e40af', label: 'Facebook', sub: 'Follow for updates & events', href: 'https://facebook.com' },
+      { icon: '🎵', bg: '#6b21a8', label: 'Worship Playlist', sub: 'Spotify', href: 'https://spotify.com' },
+      { icon: '💝', bg: '#166534', label: 'Give / Donate', sub: 'Support our mission', href: '#' },
+      { icon: '👋', bg: '#92400e', label: "I'm New Here", sub: 'What to expect on your first visit', href: '#' },
+    ],
+    details: [
+      { icon: '📍', text: '1234 Grace Ave, Spokane, WA 99201' },
+      { icon: '🕐', text: 'Sundays 9:00 AM & 11:00 AM' },
+      { icon: '📞', text: '(509) 123-4567' },
+      { icon: '🌐', text: 'gracecommunitychurch.org' },
+    ],
+    url: 'https://tapcard.autorephero.com/gracecc',
+    vcard: { fn: 'Grace Community Church', org: 'Grace Community Church', tel: '+15091234567', email: 'hello@gracecc.org', adr: '1234 Grace Ave, Spokane, WA 99201', url: 'https://gracecommunitychurch.org' }
+  },
+  business: {
+    coverColor: '#1a4731',
+    coverGradient: 'linear-gradient(135deg, #1a4731 0%, #0a1f14 100%)',
+    avatar: '🔧',
+    avatarType: 'icon',
+    name: 'Evergreen Plumbing',
+    title: 'Licensed & Insured • Spokane, WA',
+    tagline: 'Fast, honest plumbing service for Spokane homes & businesses. Available 7 days a week.',
+    themeColor: '#22c55e',
+    actions: [
+      { icon: '📞', label: 'Call', href: 'tel:+15099876543' },
+      { icon: '📍', label: 'Directions', href: 'https://maps.google.com/?q=Evergreen+Plumbing+Spokane' },
+      { icon: '💬', label: 'Text', href: 'sms:+15099876543' },
+      { icon: '📋', label: 'Quote', href: '#' },
+    ],
+    links: [
+      { icon: '⭐', bg: '#854d0e', label: 'Leave a Review', sub: 'Google • Yelp • Facebook', href: '#' },
+      { icon: '📘', bg: '#1e40af', label: 'Facebook', sub: 'Follow for tips & deals', href: 'https://facebook.com' },
+      { icon: '▶️', bg: '#7c2d12', label: 'YouTube', sub: 'DIY tips & project videos', href: 'https://youtube.com' },
+      { icon: '📸', bg: '#86198f', label: 'Instagram', sub: '@evergreenplumbing', href: 'https://instagram.com' },
+      { icon: '🌐', bg: '#1e3a5f', label: 'Website', sub: 'evergreenplumbing.com', href: '#' },
+      { icon: '🎁', bg: '#166534', label: 'Refer a Friend', sub: 'Get $25 off your next service', href: '#' },
+    ],
+    details: [
+      { icon: '📍', text: 'Serving all of Spokane & Spokane Valley' },
+      { icon: '🕐', text: 'Mon-Sun 7am - 7pm' },
+      { icon: '📞', text: '(509) 987-6543' },
+      { icon: '🌐', text: 'evergreenplumbing.com' },
+      { icon: '📜', text: 'License #EVERGP*835KA' },
+    ],
+    url: 'https://tapcard.autorephero.com/evergreen',
+    vcard: { fn: 'Evergreen Plumbing', org: 'Evergreen Plumbing', tel: '+15099876543', email: 'info@evergreenplumbing.com', adr: 'Spokane, WA', url: 'https://evergreenplumbing.com' }
+  },
+  personal: {
+    coverColor: '#2d1b69',
+    coverGradient: 'linear-gradient(135deg, #2d1b69 0%, #1a0a3e 100%)',
+    avatar: '👤',
+    avatarType: 'icon',
+    name: 'Chuck Zaagsma',
+    title: 'Founder, AutoRepHero',
+    tagline: 'Helping small businesses get more reviews, rank higher, and grow faster.',
+    themeColor: '#8b5cf6',
+    actions: [
+      { icon: '📞', label: 'Call', href: 'tel:+15098180787' },
+      { icon: '💬', label: 'Text', href: 'sms:+15098180787' },
+      { icon: '📧', label: 'Email', href: 'mailto:salesmadefaster@gmail.com' },
+      { icon: '🌐', label: 'Website', href: 'https://get.autorephero.com' },
+    ],
+    links: [
+      { icon: '🚀', bg: '#4c1d95', label: 'AutoRepHero', sub: 'Automated review solutions', href: 'https://get.autorephero.com' },
+      { icon: '📘', bg: '#1e40af', label: 'Facebook', sub: 'Connect with me', href: 'https://facebook.com' },
+      { icon: '💼', bg: '#1e3a5f', label: 'LinkedIn', sub: 'Professional profile', href: 'https://linkedin.com' },
+      { icon: '▶️', bg: '#7c2d12', label: 'YouTube', sub: 'Business tips & demos', href: 'https://youtube.com' },
+    ],
+    details: [
+      { icon: '📍', text: 'Spokane, WA' },
+      { icon: '📞', text: '(509) 818-0787' },
+      { icon: '📧', text: 'salesmadefaster@gmail.com' },
+      { icon: '🌐', text: 'get.autorephero.com' },
+    ],
+    url: 'https://tapcard.autorephero.com/chuck',
+    vcard: { fn: 'Chuck Zaagsma', org: 'AutoRepHero', tel: '+15098180787', email: 'salesmadefaster@gmail.com', adr: 'Spokane, WA', url: 'https://get.autorephero.com' }
+  }
+};
+
+function showDemo(type) {
+  document.querySelectorAll('.demo-switch').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  renderCard(DEMOS[type]);
+}
+
+function renderCard(d) {
+  const c = document.getElementById('cardContainer');
+  c.innerHTML = `
+    <div class="card-cover" style="background:${d.coverGradient}">
+      <div class="card-cover-overlay"></div>
+    </div>
+    <div class="card-avatar-wrap">
+      <div class="card-avatar icon" style="background:${d.coverColor}">${d.avatar}</div>
+    </div>
+    <div class="card-info">
+      <div class="card-name">${d.name}</div>
+      <div class="card-title">${d.title}</div>
+      <div class="card-tagline">${d.tagline}</div>
+    </div>
+    <div class="card-actions">
+      ${d.actions.map(a => `<a class="action-btn" href="${a.href}"><div class="icon-circle" style="background:${d.themeColor}">${a.icon}</div><span>${a.label}</span></a>`).join('')}
+    </div>
+    <div class="card-links">
+      ${d.links.map(l => `<a class="link-item" href="${l.href}"><div class="link-icon" style="background:${l.bg}">${l.icon}</div><div class="link-text"><div class="label">${l.label}</div><div class="sub">${l.sub}</div></div><div class="link-arrow">›</div></a>`).join('')}
+    </div>
+    <div class="card-details">
+      ${d.details.map(dt => `<div class="detail-row"><span class="di">${dt.icon}</span>${dt.text}</div>`).join('')}
+    </div>
+    <div class="share-bar">
+      <div style="text-align:center;padding:4px 8px;background:#111;border-radius:8px;margin-bottom:4px">
+        <span style="font-size:11px;color:#666">Your card link: </span>
+        <span style="font-size:12px;color:#3b82f6;word-break:break-all">${d.url}</span>
+      </div>
+      <button class="share-btn primary" onclick='shareCard("${d.url}","${d.name}")'>📤 Share This Card</button>
+      <button class="share-btn secondary" onclick='showQR("${d.url}","${d.name}")'>📱 Show QR Code</button>
+      <button class="share-btn save" onclick='saveContact(${JSON.stringify(d.vcard).replace(/'/g,"&#39;")})'>📇 Save to My Contacts</button>
+      <div style="text-align:center;font-size:10px;color:#444;text-transform:uppercase;letter-spacing:1px;margin:4px 0">— Card Owner —</div>
+      <button class="share-btn secondary" onclick='addToHomeScreen("${d.name}")'>📲 Add Shortcut to My Phone</button>
+    </div>
+    <div class="powered-by">Powered by <a href="https://get.autorephero.com">AutoRepHero</a></div>
+  `;
+}
+
+function shareCard(url, name) {
+  if (navigator.share) {
+    navigator.share({ title: name + ' — TapCard', url: url }).catch(() => {});
+  } else {
+    navigator.clipboard.writeText(url).then(() => {
+      alert('Link copied!\n\n' + url);
+    });
+  }
+}
+
+function showQR(url, name) {
+  document.getElementById('qrTitle').textContent = name;
+  document.getElementById('qrOverlay').classList.add('active');
+  const canvas = document.getElementById('qrCanvas');
+  // Use API-generated QR image instead of JS library (works offline/local files)
+  const img = new Image();
+  img.crossOrigin = 'anonymous';
+  img.onload = function() {
+    canvas.width = 220; canvas.height = 220;
+    canvas.getContext('2d').drawImage(img, 0, 0, 220, 220);
+  };
+  img.src = 'https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=' + encodeURIComponent(url);
+}
+
+function closeQR() { document.getElementById('qrOverlay').classList.remove('active'); }
+
+let deferredInstallPrompt = null;
+window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); deferredInstallPrompt = e; });
+
+function addToHomeScreen(name) {
+  // Android: use native install prompt if available
+  if (deferredInstallPrompt) {
+    deferredInstallPrompt.prompt();
+    deferredInstallPrompt.userChoice.then(r => { deferredInstallPrompt = null; });
+    return;
+  }
+  // iOS / fallback: show instructions
+  const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent);
+  const modal = document.getElementById('qrOverlay');
+  const title = document.getElementById('qrTitle');
+  const sub = document.getElementById('qrSub');
+  const canvas = document.getElementById('qrCanvas');
+  canvas.width = 0; canvas.height = 0;
+  title.textContent = '📲 Add to Home Screen';
+  if (isIOS) {
+    sub.innerHTML = '<div style="text-align:left;font-size:14px;line-height:2;color:#333">' +
+      '1. Tap the <b>Share</b> button <span style="font-size:18px">⬆️</span> at the bottom<br>' +
+      '2. Scroll down and tap <b>"Add to Home Screen"</b><br>' +
+      '3. Tap <b>"Add"</b> in the top right<br><br>' +
+      '<span style="color:#888;font-size:12px">Your TapCard will appear as an app icon!</span></div>';
+  } else {
+    sub.innerHTML = '<div style="text-align:left;font-size:14px;line-height:2;color:#333">' +
+      '1. Tap the <b>⋮ menu</b> (top right of browser)<br>' +
+      '2. Tap <b>"Add to Home Screen"</b> or <b>"Install App"</b><br>' +
+      '3. Tap <b>"Add"</b><br><br>' +
+      '<span style="color:#888;font-size:12px">Your TapCard will appear as an app icon!</span></div>';
+  }
+  modal.classList.add('active');
+}
+
+function saveContact(vc) {
+  const vcard = [
+    'BEGIN:VCARD', 'VERSION:3.0',
+    'FN:' + vc.fn,
+    vc.org ? 'ORG:' + vc.org : '',
+    vc.tel ? 'TEL;TYPE=WORK:' + vc.tel : '',
+    vc.email ? 'EMAIL:' + vc.email : '',
+    vc.adr ? 'ADR;TYPE=WORK:;;' + vc.adr : '',
+    vc.url ? 'URL:' + vc.url : '',
+    'END:VCARD'
+  ].filter(Boolean).join('\n');
+  const blob = new Blob([vcard], { type: 'text/vcard' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = vc.fn.replace(/\s+/g, '_') + '.vcf';
+  a.click();
+}
+
+// ===== BUILDER =====
+let builderColor = '#3b82f6';
+
+function showBuilder() {
+  document.querySelectorAll('.demo-switch').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById('cardContainer').style.display = 'none';
+  document.getElementById('builder').classList.add('active');
+}
+
+function showDemo(type) {
+  document.querySelectorAll('.demo-switch').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById('builder').classList.remove('active');
+  document.getElementById('cardContainer').style.display = 'flex';
+  renderCard(DEMOS[type]);
+}
+
+function pickColor(c, el) {
+  builderColor = c;
+  document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('active'));
+  el.classList.add('active');
+}
+
+const LINK_PREFIXES = {
+  facebook: 'facebook.com/', instagram: 'instagram.com/', youtube: 'youtube.com/',
+  linkedin: 'linkedin.com/in/', tiktok: 'tiktok.com/@', google: 'Full Google review URL',
+  yelp: 'yelp.com/biz/', website: 'https://', other: 'https://'
+};
+const LINK_PLACEHOLDERS = {
+  facebook: 'yourpage', instagram: 'yourhandle', youtube: 'yourchannel',
+  linkedin: 'yourprofile', tiktok: 'yourhandle', google: 'Paste full link',
+  yelp: 'your-business', website: 'yourbusiness.com', other: 'https://...'
+};
+
+function updateLinkPlaceholder(sel) {
+  const field = sel.closest('.link-field');
+  const prefix = field.querySelector('.link-prefix');
+  const input = field.querySelector('input');
+  const val = sel.value;
+  if (['google','website','other'].includes(val)) {
+    prefix.style.display = 'none';
+    input.placeholder = LINK_PLACEHOLDERS[val];
+  } else {
+    prefix.style.display = '';
+    prefix.textContent = LINK_PREFIXES[val];
+    input.placeholder = LINK_PLACEHOLDERS[val];
+  }
+}
+
+function addLinkField() {
+  const lf = document.getElementById('linkFields');
+  const div = document.createElement('div');
+  div.className = 'link-field';
+  div.innerHTML = `<select onchange="updateLinkPlaceholder(this)" style="font-size:15px;padding:12px 8px">
+    <option value="facebook">📘 Facebook</option><option value="instagram">📸 Instagram</option><option value="youtube">▶️ YouTube</option><option value="linkedin">💼 LinkedIn</option><option value="tiktok">🎵 TikTok</option><option value="google">⭐ Google Reviews</option><option value="yelp">⭐ Yelp</option><option value="website">🌐 Website</option><option value="other">🔗 Other</option>
+  </select>
+  <div style="display:flex;align-items:center;flex:1;background:#1a1a1a;border:1px solid #333;border-radius:10px;overflow:hidden">
+    <span class="link-prefix" style="padding:0 2px 0 10px;font-size:11px;color:#666;white-space:nowrap">facebook.com/</span>
+    <input type="text" placeholder="yourpage" style="border:none;background:transparent;padding:12px 10px 12px 0;flex:1;min-width:0">
+  </div>`;
+  lf.appendChild(div);
+}
+
+function formatPhone(input) {
+  let v = input.value.replace(/\D/g, '');
+  if (v.length > 10) v = v.slice(0, 10);
+  if (v.length >= 7) input.value = '(' + v.slice(0,3) + ') ' + v.slice(3,6) + '-' + v.slice(6);
+  else if (v.length >= 4) input.value = '(' + v.slice(0,3) + ') ' + v.slice(3);
+  else if (v.length > 0) input.value = '(' + v;
+}
+
+function searchBiz(q) {
+  const sr = document.getElementById('searchResults');
+  if (q.length < 3) { sr.classList.remove('active'); return; }
+  // Use Google Places Autocomplete API (needs key) or fallback
+  sr.innerHTML = '<div class="search-result" onclick="fillFromSearch(this)"><div class="sr-name">🔍 Searching requires Google Places API key</div><div class="sr-addr">Enter details manually below for now</div></div>';
+  sr.classList.add('active');
+}
+
+function fillFromSearch(el) {
+  document.getElementById('searchResults').classList.remove('active');
+}
+
+function updateBuilderType() {
+  const t = document.getElementById('b_type').value;
+  const nameLabel = document.querySelector('label[for="b_name"]') || document.getElementById('b_name').previousElementSibling;
+  if (t === 'church') nameLabel.textContent = 'Church / Organization Name';
+  else if (t === 'personal') nameLabel.textContent = 'Your Name';
+  else if (t === 'realtor') nameLabel.textContent = 'Your Name';
+  else nameLabel.textContent = 'Business Name';
+}
+
+function generateCard() {
+  const name = document.getElementById('b_name').value || 'My TapCard';
+  const title = document.getElementById('b_title').value || '';
+  const desc = document.getElementById('b_desc').value || '';
+  const phone = document.getElementById('b_phone').value || '';
+  const email = document.getElementById('b_email').value || '';
+  const address = document.getElementById('b_address').value || '';
+  const website = document.getElementById('b_website').value || '';
+  const type = document.getElementById('b_type').value;
+  
+  const typeIcons = { business: '🔧', church: '⛪', personal: '👤', realtor: '🏠' };
+  
+  // Build actions
+  const actions = [];
+  if (phone) actions.push({ icon: '📞', label: 'Call', href: 'tel:' + phone.replace(/\D/g,'').replace(/^(\d{10})$/,'+1$1') });
+  if (phone) actions.push({ icon: '💬', label: 'Text', href: 'sms:' + phone.replace(/\D/g,'').replace(/^(\d{10})$/,'+1$1') });
+  if (address) actions.push({ icon: '📍', label: 'Map', href: 'https://maps.google.com/?q=' + encodeURIComponent(address) });
+  if (email) actions.push({ icon: '📧', label: 'Email', href: 'mailto:' + email });
+  
+  // Build links from link fields
+  const linkEls = document.querySelectorAll('.link-field');
+  const linkStyles = {
+    facebook: { icon: '📘', bg: '#1e40af', label: 'Facebook', base: 'https://facebook.com/' },
+    instagram: { icon: '📸', bg: '#86198f', label: 'Instagram', base: 'https://instagram.com/' },
+    youtube: { icon: '▶️', bg: '#7c2d12', label: 'YouTube', base: 'https://youtube.com/' },
+    linkedin: { icon: '💼', bg: '#1e3a5f', label: 'LinkedIn', base: 'https://linkedin.com/in/' },
+    tiktok: { icon: '🎵', bg: '#111', label: 'TikTok', base: 'https://tiktok.com/@' },
+    google: { icon: '⭐', bg: '#854d0e', label: 'Google Reviews', base: '' },
+    yelp: { icon: '⭐', bg: '#af1b1b', label: 'Yelp', base: 'https://yelp.com/biz/' },
+    website: { icon: '🌐', bg: '#1e3a5f', label: 'Website', base: '' },
+    other: { icon: '🔗', bg: '#333', label: 'Link', base: '' },
+  };
+  const links = [];
+  linkEls.forEach(el => {
+    const selVal = el.querySelector('select').value;
+    const inputVal = el.querySelector('input').value.trim();
+    if (inputVal) {
+      const s = linkStyles[selVal] || linkStyles.other;
+      const fullUrl = ['google','website','other'].includes(selVal) ? (inputVal.startsWith('http') ? inputVal : 'https://' + inputVal) : s.base + inputVal;
+      const sub = fullUrl.replace(/https?:\/\/(www\.)?/,'').split('/').slice(0,2).join('/');
+      links.push({ icon: s.icon, bg: s.bg, label: s.label, sub: sub, href: fullUrl });
+    }
+  });
+  if (website && !links.find(l => l.href === website)) {
+    links.push({ icon: '🌐', bg: '#1e3a5f', label: 'Website', sub: website.replace(/https?:\/\/(www\.)?/,''), href: website });
+  }
+  
+  // Build details
+  const details = [];
+  if (address) details.push({ icon: '📍', text: address });
+  if (phone) details.push({ icon: '📞', text: phone });
+  if (email) details.push({ icon: '📧', text: email });
+  if (website) details.push({ icon: '🌐', text: website.replace(/https?:\/\/(www\.)?/,'') });
+  
+  // Darken theme color for cover
+  const hex = builderColor.replace('#','');
+  const r = Math.max(0, parseInt(hex.substr(0,2),16) - 100);
+  const g = Math.max(0, parseInt(hex.substr(2,2),16) - 100);
+  const b = Math.max(0, parseInt(hex.substr(4,2),16) - 100);
+  const dark = '#' + r.toString(16).padStart(2,'0') + g.toString(16).padStart(2,'0') + b.toString(16).padStart(2,'0');
+  
+  const slug = name.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+  
+  const card = {
+    coverGradient: `linear-gradient(135deg, ${builderColor}44 0%, ${dark} 100%)`,
+    coverColor: dark,
+    avatar: typeIcons[type] || '🔧',
+    avatarType: 'icon',
+    name: name,
+    title: title,
+    tagline: desc,
+    themeColor: builderColor,
+    actions: actions,
+    links: links,
+    details: details,
+    url: 'https://tapcard.autorephero.com/' + slug,
+    vcard: { fn: name, org: name, tel: phone.replace(/\D/g,'').replace(/^(\d{10})$/,'+1$1'), email: email, adr: address, url: website }
+  };
+  
+  // Show the card
+  document.getElementById('builder').classList.remove('active');
+  document.getElementById('cardContainer').style.display = 'flex';
+  renderCard(card);
+}
+
+// Init
+renderCard(DEMOS.church);
+</script>
+</body>
+</html>
