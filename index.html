@@ -85,6 +85,12 @@ body{font-family:'Inter',sans-serif;background:#0a0a0a;color:#fff;min-height:100
 .demo-switcher{position:fixed;top:32px;right:0;left:0;z-index:50;display:flex;gap:6px;justify-content:center;flex-wrap:wrap;padding:0 12px}
 .demo-switch{padding:6px 12px;border:1px solid #333;background:#1a1a1a;color:#fff;border-radius:8px;font-family:inherit;font-size:11px;font-weight:600;cursor:pointer}
 .demo-switch.active{background:#fff;color:#000;border-color:#fff}
+.pac-container{z-index:9999!important;background:#1a1a1a!important;border:1px solid #333!important;border-radius:10px!important;margin-top:4px!important;font-family:Inter,sans-serif!important}
+.pac-item{padding:10px 14px!important;border-bottom:1px solid #222!important;color:#ddd!important;cursor:pointer!important;font-size:13px!important}
+.pac-item:hover{background:#252525!important}
+.pac-item-query{color:#fff!important;font-weight:600!important}
+.pac-matched{color:#34d399!important}
+.pac-icon{display:none!important}
 .powered-by{text-align:center;padding:12px;font-size:13px;color:#888}
 .powered-by a{color:#999;text-decoration:none;font-weight:500}
 .powered-by a:active{color:#34d399}
@@ -517,9 +523,11 @@ let builderColor = '#3b82f6';
 
 function showBuilder() {
   document.querySelectorAll('.demo-switch').forEach(b => b.classList.remove('active'));
-  event.target.classList.add('active');
+  if (event && event.target) event.target.classList.add('active');
   document.getElementById('cardContainer').style.display = 'none';
   document.getElementById('builder').classList.add('active');
+  // Init Google Places autocomplete when builder is shown
+  setTimeout(setupAutocomplete, 100);
 }
 
 function showDemo(type) {
@@ -585,31 +593,48 @@ function formatPhone(input) {
 }
 
 let placesAutocomplete = null;
-let placesService = null;
+let placesInited = false;
 
 function initPlaces() {
+  // Called by Google Maps script callback — just mark as ready
+  placesInited = true;
+  setupAutocomplete();
+}
+
+function setupAutocomplete() {
+  if (placesAutocomplete) return; // already set up
   const input = document.getElementById('bizSearch');
-  if (!input || !google?.maps?.places) return;
+  if (!input || !placesInited || !window.google?.maps?.places) return;
+  
   placesAutocomplete = new google.maps.places.Autocomplete(input, {
     types: ['establishment'],
     fields: ['name', 'formatted_address', 'formatted_phone_number', 'website', 'geometry', 'address_components', 'url']
   });
-  placesAutocomplete.addListener('place_changed', () => {
+  
+  // Prevent form submission on enter
+  input.addEventListener('keydown', function(e) { if (e.key === 'Enter') e.preventDefault(); });
+  
+  placesAutocomplete.addListener('place_changed', function() {
     const place = placesAutocomplete.getPlace();
-    if (!place.name) return;
+    if (!place || !place.name) return;
+    
     document.getElementById('b_name').value = place.name || '';
     document.getElementById('b_address').value = place.formatted_address || '';
     document.getElementById('b_phone').value = place.formatted_phone_number || '';
     document.getElementById('b_website').value = place.website || '';
-    // Auto-set title
-    const city = (place.address_components || []).find(c => c.types.includes('locality'));
-    const state = (place.address_components || []).find(c => c.types.includes('administrative_area_level_1'));
+    
+    // Auto-set title from city/state
+    const city = (place.address_components || []).find(function(c) { return c.types.includes('locality'); });
+    const state = (place.address_components || []).find(function(c) { return c.types.includes('administrative_area_level_1'); });
     if (city && state) {
       document.getElementById('b_title').value = city.long_name + ', ' + state.short_name;
     }
+    
     // Format phone if exists
     const phoneInput = document.getElementById('b_phone');
     if (phoneInput.value) formatPhone(phoneInput);
+    
+    // Hide old search results div
     document.getElementById('searchResults').classList.remove('active');
   });
 }
