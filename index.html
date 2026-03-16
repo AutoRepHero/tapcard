@@ -17,7 +17,7 @@
 <link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBdLY6yPpNZFD7AB2dPECsznDNTFpiRuwU&libraries=places&callback=initPlaces"></script>
+
 
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -162,7 +162,7 @@ body{font-family:'Inter',sans-serif;background:#0a0a0a;color:#fff;min-height:100
   <p class="sub">Search for your business or enter details manually</p>
   
   <div class="search-wrap">
-    <input type="text" id="bizSearch" placeholder="Search your business name..." oninput="searchBiz(this.value)">
+    <input type="text" id="bizSearch" placeholder="Search your business name..." oninput="searchBizPlaces(this.value)" autocomplete="off">
   </div>
   <div class="search-results" id="searchResults"></div>
   
@@ -527,8 +527,7 @@ function showBuilder() {
   if (event && event.target) event.target.classList.add('active');
   document.getElementById('cardContainer').style.display = 'none';
   document.getElementById('builder').classList.add('active');
-  // Init Google Places autocomplete when builder is shown
-  setTimeout(setupAutocomplete, 100);
+
 }
 
 function showDemo(type) {
@@ -593,56 +592,56 @@ function formatPhone(input) {
   else if (v.length > 0) input.value = '(' + v;
 }
 
-let placesAutocomplete = null;
-let placesInited = false;
+const PLACES_KEY = 'AIzaSyBdLY6yPpNZFD7AB2dPECsznDNTFpiRuwU';
+let searchTimeout = null;
 
-function initPlaces() {
-  // Called by Google Maps script callback — just mark as ready
-  placesInited = true;
-  setupAutocomplete();
+function searchBizPlaces(q) {
+  const sr = document.getElementById('searchResults');
+  if (q.length < 3) { sr.classList.remove('active'); sr.innerHTML = ''; return; }
+  clearTimeout(searchTimeout);
+  searchTimeout = setTimeout(async () => {
+    try {
+      const proxy = 'https://corsproxy.io/?';
+      const url = `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${encodeURIComponent(q)}&types=establishment&key=${PLACES_KEY}`;
+      const res = await fetch(proxy + encodeURIComponent(url));
+      const data = await res.json();
+      if (data.predictions && data.predictions.length > 0) {
+        sr.innerHTML = data.predictions.slice(0, 5).map(p =>
+          `<div class="search-result" onclick="selectPlace('${p.place_id}')">
+            <div class="sr-name">${p.structured_formatting.main_text}</div>
+            <div class="sr-addr">${p.structured_formatting.secondary_text || ''}</div>
+          </div>`
+        ).join('');
+        sr.classList.add('active');
+      } else {
+        sr.classList.remove('active');
+      }
+    } catch(e) { sr.classList.remove('active'); }
+  }, 300);
 }
 
-function setupAutocomplete() {
-  if (placesAutocomplete) return; // already set up
-  const input = document.getElementById('bizSearch');
-  if (!input || !placesInited || !window.google?.maps?.places) return;
-  
-  placesAutocomplete = new google.maps.places.Autocomplete(input, {
-    types: ['establishment'],
-    fields: ['name', 'formatted_address', 'formatted_phone_number', 'website', 'geometry', 'address_components', 'url']
-  });
-  
-  // Prevent form submission on enter
-  input.addEventListener('keydown', function(e) { if (e.key === 'Enter') e.preventDefault(); });
-  
-  placesAutocomplete.addListener('place_changed', function() {
-    const place = placesAutocomplete.getPlace();
-    if (!place || !place.name) return;
-    
-    document.getElementById('b_name').value = place.name || '';
-    document.getElementById('b_address').value = place.formatted_address || '';
-    document.getElementById('b_phone').value = place.formatted_phone_number || '';
-    document.getElementById('b_website').value = place.website || '';
-    
-    // Auto-set title from city/state
-    const city = (place.address_components || []).find(function(c) { return c.types.includes('locality'); });
-    const state = (place.address_components || []).find(function(c) { return c.types.includes('administrative_area_level_1'); });
-    if (city && state) {
-      document.getElementById('b_title').value = city.long_name + ', ' + state.short_name;
+async function selectPlace(placeId) {
+  const sr = document.getElementById('searchResults');
+  sr.classList.remove('active');
+  try {
+    const proxy = 'https://corsproxy.io/?';
+    const url = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${placeId}&fields=name,formatted_address,formatted_phone_number,website,address_components&key=${PLACES_KEY}`;
+    const res = await fetch(proxy + encodeURIComponent(url));
+    const data = await res.json();
+    if (data.result) {
+      const r = data.result;
+      document.getElementById('b_name').value = r.name || '';
+      document.getElementById('b_address').value = r.formatted_address || '';
+      document.getElementById('b_phone').value = r.formatted_phone_number || '';
+      document.getElementById('b_website').value = r.website || '';
+      const city = (r.address_components || []).find(c => c.types.includes('locality'));
+      const state = (r.address_components || []).find(c => c.types.includes('administrative_area_level_1'));
+      if (city && state) document.getElementById('b_title').value = city.long_name + ', ' + state.short_name;
+      const phoneInput = document.getElementById('b_phone');
+      if (phoneInput.value) formatPhone(phoneInput);
+      document.getElementById('bizSearch').value = r.name;
     }
-    
-    // Format phone if exists
-    const phoneInput = document.getElementById('b_phone');
-    if (phoneInput.value) formatPhone(phoneInput);
-    
-    // Hide old search results div
-    document.getElementById('searchResults').classList.remove('active');
-  });
-}
-
-function searchBiz(q) {
-  // Google Places Autocomplete handles this via the input binding
-  // The dropdown is native Google UI
+  } catch(e) { console.error('Place details error:', e); }
 }
 
 function fillFromSearch(el) {
