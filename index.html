@@ -344,15 +344,15 @@ function renderCard(d) {
     </div>
     <div class="share-bar">
       <a href="https://rbo.autorephero.com" target="_blank" class="share-btn" style="background:linear-gradient(135deg,#22c55e,#15803d);color:#fff;text-decoration:none;text-align:center;font-weight:700">🎁 Create a Special Offer</a>
-      <div style="text-align:center;padding:4px 8px;background:#111;border-radius:8px;margin-bottom:4px">
-        <span style="font-size:11px;color:#666">Your card link: </span>
-        <span style="font-size:12px;color:#3b82f6;word-break:break-all">${d.url}</span>
-      </div>
       <button class="share-btn primary" onclick='shareCard("${d.url}","${d.name}")'>📤 Share This Card</button>
       <button class="share-btn secondary" onclick='showQR("${d.url}","${d.name}")'>📱 Show QR Code</button>
       <button class="share-btn save" onclick='saveContact(${JSON.stringify(d.vcard).replace(/'/g,"&#39;")})'>📇 Save to My Contacts</button>
       <div style="text-align:center;font-size:10px;color:#444;text-transform:uppercase;letter-spacing:1px;margin:4px 0">— Card Owner —</div>
       <button class="share-btn secondary" onclick='addToHomeScreen("${d.name}")'>📲 Add Shortcut to My Phone</button>
+    </div>
+    <div style="text-align:center;padding:4px 8px;margin-bottom:2px">
+      <span style="font-size:11px;color:#666">Your card link: </span>
+      <span style="font-size:12px;color:#3b82f6;word-break:break-all">${d.url}</span>
     </div>
     <div class="powered-by">Powered by <a href="https://autorephero.com">AutoRepHero</a></div>
   `;
