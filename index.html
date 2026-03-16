@@ -133,16 +133,18 @@ body{font-family:'Inter',sans-serif;background:#0a0a0a;color:#fff;min-height:100
   <div style="font-size:10px;color:#888;margin-top:1px">Your digital identity — share instantly with anyone</div>
   <button onclick="showBuilder()" style="margin-top:6px;padding:8px 24px;background:#22c55e;color:#000;border:none;border-radius:8px;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer">✚ Create Yours Free</button>
 </div>
-<div style="height:90px"></div>
-<div style="display:flex;align-items:center;gap:12px;padding:8px 20px">
-  <div style="flex:1;height:1px;background:#333"></div>
-  <span style="font-size:10px;color:#555;text-transform:uppercase;letter-spacing:1.5px;font-weight:600">Examples</span>
-  <div style="flex:1;height:1px;background:#333"></div>
-</div>
-<div class="demo-switcher" style="position:static;padding:0 12px 8px">
+<div style="height:150px"></div>
+<div style="position:fixed;top:90px;left:0;right:0;z-index:55;background:#0a0a0a;padding:6px 20px 8px;border-bottom:1px solid #1a1a1a">
+  <div style="display:flex;align-items:center;gap:12px;margin-bottom:6px">
+    <div style="flex:1;height:1px;background:#333"></div>
+    <span style="font-size:10px;color:#555;text-transform:uppercase;letter-spacing:1.5px;font-weight:600">Examples</span>
+    <div style="flex:1;height:1px;background:#333"></div>
+  </div>
+  <div style="display:flex;gap:6px;justify-content:center;flex-wrap:wrap">
   <button class="demo-switch active" onclick="showDemo('church')">⛪ Church</button>
   <button class="demo-switch" onclick="showDemo('business')"><img src="autorephero-logo.jpg" style="width:14px;height:14px;border-radius:3px;vertical-align:middle"> Business</button>
   <button class="demo-switch" onclick="showDemo('personal')">👤 Personal</button>
+  </div>
 </div>
 
 <div class="card-container" id="cardContainer"></div>
