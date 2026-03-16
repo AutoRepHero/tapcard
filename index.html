@@ -213,21 +213,42 @@ body{font-family:'Inter',sans-serif;background:#0a0a0a;color:#fff;min-height:100
   
   <div class="section-label" style="margin-top:12px">🎁 Special Offer (optional)</div>
   <div id="offerToggle">
-    <button onclick="document.getElementById('offerToggle').style.display='none';document.getElementById('offerFields').style.display='block'" style="width:100%;padding:14px;background:none;border:1px dashed #34d399;border-radius:14px;color:#34d399;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit">⚡🎁 Add a Rapid Business Offer to Your Card</button>
+    <button onclick="document.getElementById('offerToggle').style.display='none';document.getElementById('offerFields').style.display='block'" style="width:100%;padding:16px;background:linear-gradient(135deg,rgba(52,211,153,0.08),rgba(56,189,248,0.08));border:1px dashed #34d399;border-radius:14px;color:#34d399;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit">⚡🎁 Add a Rapid Business Offer to Your Card</button>
   </div>
   <div id="offerFields" style="display:none">
+    <!-- AI Offer Helper -->
+    <div id="offerAI" style="padding:14px 16px;background:linear-gradient(135deg,rgba(52,211,153,0.08),rgba(56,189,248,0.08));border:1px solid rgba(52,211,153,0.2);border-radius:12px;margin-bottom:16px;cursor:pointer" onclick="document.getElementById('offerAIpicker').style.display=document.getElementById('offerAIpicker').style.display==='none'?'block':'none'">
+      <div style="font-size:18px;margin-bottom:4px">🤖</div>
+      <div style="font-size:13px;color:#34d399;font-weight:700">AI Offer Assistant</div>
+      <div style="font-size:11px;color:#666;margin-top:2px">Not sure what to offer? Tell me your business type and I'll suggest the perfect deal.</div>
+    </div>
+    <div id="offerAIpicker" style="display:none;margin-bottom:16px">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+        <button onclick="aiOffer('plumber')" style="padding:12px;background:#1a1a1a;border:1px solid #333;border-radius:10px;color:#ddd;font-size:12px;cursor:pointer;font-family:inherit;text-align:left">🔧 Plumber / HVAC</button>
+        <button onclick="aiOffer('roofer')" style="padding:12px;background:#1a1a1a;border:1px solid #333;border-radius:10px;color:#ddd;font-size:12px;cursor:pointer;font-family:inherit;text-align:left">🏠 Roofer / Contractor</button>
+        <button onclick="aiOffer('auto')" style="padding:12px;background:#1a1a1a;border:1px solid #333;border-radius:10px;color:#ddd;font-size:12px;cursor:pointer;font-family:inherit;text-align:left">🚗 Auto Repair</button>
+        <button onclick="aiOffer('restaurant')" style="padding:12px;background:#1a1a1a;border:1px solid #333;border-radius:10px;color:#ddd;font-size:12px;cursor:pointer;font-family:inherit;text-align:left">🍕 Restaurant</button>
+        <button onclick="aiOffer('salon')" style="padding:12px;background:#1a1a1a;border:1px solid #333;border-radius:10px;color:#ddd;font-size:12px;cursor:pointer;font-family:inherit;text-align:left">💇 Salon / Spa</button>
+        <button onclick="aiOffer('retail')" style="padding:12px;background:#1a1a1a;border:1px solid #333;border-radius:10px;color:#ddd;font-size:12px;cursor:pointer;font-family:inherit;text-align:left">🛍️ Retail / Shop</button>
+        <button onclick="aiOffer('realtor')" style="padding:12px;background:#1a1a1a;border:1px solid #333;border-radius:10px;color:#ddd;font-size:12px;cursor:pointer;font-family:inherit;text-align:left">🏡 Realtor</button>
+        <button onclick="aiOffer('other')" style="padding:12px;background:#1a1a1a;border:1px solid #333;border-radius:10px;color:#ddd;font-size:12px;cursor:pointer;font-family:inherit;text-align:left">📦 Other</button>
+      </div>
+    </div>
+
+    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:#666;margin-bottom:8px">Quick Templates</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px">
+      <button onclick="fillOffer('10% Off Your First Service!','10%','off any service')" style="padding:10px 14px;background:#1a1a1a;border:1px solid #333;border-radius:10px;color:#ddd;font-size:12px;cursor:pointer;font-family:inherit">💰 10% Off</button>
+      <button onclick="fillOffer('$25 Off Your Next Visit!','$25','off next visit')" style="padding:10px 14px;background:#1a1a1a;border:1px solid #333;border-radius:10px;color:#ddd;font-size:12px;cursor:pointer;font-family:inherit">💵 $25 Off</button>
+      <button onclick="fillOffer('Free Estimate!','FREE','estimate or inspection')" style="padding:10px 14px;background:#1a1a1a;border:1px solid #333;border-radius:10px;color:#ddd;font-size:12px;cursor:pointer;font-family:inherit">🎁 Free Estimate</button>
+      <button onclick="fillOffer('Refer a Friend — Both Save!','$25','off for both of you')" style="padding:10px 14px;background:#1a1a1a;border:1px solid #333;border-radius:10px;color:#ddd;font-size:12px;cursor:pointer;font-family:inherit">🤝 Referral</button>
+    </div>
+
     <div class="field"><label>Offer Headline</label><input type="text" id="b_offer_headline" placeholder="10% Off Your First Service!"></div>
-    <div class="field-row">
+    <div class="field-row" style="margin-top:8px">
       <div class="field"><label>Value</label><input type="text" id="b_offer_value" placeholder="10%"></div>
       <div class="field"><label>Value Detail</label><input type="text" id="b_offer_sub" placeholder="off any service"></div>
     </div>
-    <div class="field"><label>Details / Conditions</label><input type="text" id="b_offer_desc" placeholder="New customers only. Expires April 30."></div>
-    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px">
-      <button onclick="fillOffer('10% Off','10%','off any service')" style="padding:6px 10px;background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#aaa;font-size:11px;cursor:pointer;font-family:inherit">💰 10% Off</button>
-      <button onclick="fillOffer('$25 Off','$25','off next visit')" style="padding:6px 10px;background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#aaa;font-size:11px;cursor:pointer;font-family:inherit">💵 $25 Off</button>
-      <button onclick="fillOffer('Free Estimate','FREE','estimate or inspection')" style="padding:6px 10px;background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#aaa;font-size:11px;cursor:pointer;font-family:inherit">🎁 Free Estimate</button>
-      <button onclick="fillOffer('Refer a Friend','$25','off for both of you')" style="padding:6px 10px;background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#aaa;font-size:11px;cursor:pointer;font-family:inherit">🤝 Referral</button>
-    </div>
+    <div class="field" style="margin-top:8px"><label>Details / Conditions</label><input type="text" id="b_offer_desc" placeholder="New customers only. Expires April 30."></div>
   </div>
 
   <button class="generate-btn" onclick="generateCard()">⚡ Generate My Rapid Share Card</button>
@@ -581,6 +602,26 @@ function updateBuilderType() {
   else if (t === 'personal') nameLabel.textContent = 'Your Name';
   else if (t === 'realtor') nameLabel.textContent = 'Your Name';
   else nameLabel.textContent = 'Business Name';
+}
+
+const AI_OFFERS = {
+  plumber: { h: '$50 Off Any Plumbing Repair', v: '$50', s: 'off repairs over $200', d: 'Leaks, clogs, water heaters. Licensed & insured. Same-day service.' },
+  roofer: { h: 'Free Roof Inspection + 10% Off', v: 'FREE', s: 'inspection + 10% off repairs', d: 'We inspect at no charge. If repairs needed, save 10%.' },
+  auto: { h: '$25 Off Your Next Oil Change', v: '$25', s: 'off any oil change', d: 'Full synthetic included. Free multi-point inspection with every service.' },
+  restaurant: { h: 'Buy One Entree, Get One Free!', v: 'BOGO', s: 'free entree with purchase', d: 'Dine in only. Second entree of equal or lesser value.' },
+  salon: { h: '20% Off Your First Visit', v: '20%', s: 'off any service', d: 'Haircuts, color, styling. New clients only.' },
+  retail: { h: 'Buy 2, Get 1 Free!', v: 'B2G1', s: 'free item with purchase', d: 'Mix and match. Free item equal or lesser value.' },
+  realtor: { h: 'Free Home Value Report', v: 'FREE', s: 'market analysis', d: 'Find out what your home is worth. No obligation.' },
+  other: { h: '15% Off Your First Service', v: '15%', s: 'off first booking', d: 'We want to earn your business. Book today and save!' },
+};
+
+function aiOffer(type) {
+  const o = AI_OFFERS[type];
+  document.getElementById('b_offer_headline').value = o.h;
+  document.getElementById('b_offer_value').value = o.v;
+  document.getElementById('b_offer_sub').value = o.s;
+  document.getElementById('b_offer_desc').value = o.d;
+  document.getElementById('offerAIpicker').style.display = 'none';
 }
 
 function fillOffer(headline, value, sub) {
