@@ -211,8 +211,26 @@ body{font-family:'Inter',sans-serif;background:#0a0a0a;color:#fff;min-height:100
   </div>
   <button class="add-link" onclick="addLinkField()" style="font-size:14px;padding:14px">+ Add another link</button>
   
+  <div class="section-label" style="margin-top:12px">🎁 Special Offer (optional)</div>
+  <div id="offerToggle">
+    <button onclick="document.getElementById('offerToggle').style.display='none';document.getElementById('offerFields').style.display='block'" style="width:100%;padding:14px;background:none;border:1px dashed #34d399;border-radius:14px;color:#34d399;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit">🎁 Add a Special Offer to Your Card</button>
+  </div>
+  <div id="offerFields" style="display:none">
+    <div class="field"><label>Offer Headline</label><input type="text" id="b_offer_headline" placeholder="10% Off Your First Service!"></div>
+    <div class="field-row">
+      <div class="field"><label>Value</label><input type="text" id="b_offer_value" placeholder="10%"></div>
+      <div class="field"><label>Value Detail</label><input type="text" id="b_offer_sub" placeholder="off any service"></div>
+    </div>
+    <div class="field"><label>Details / Conditions</label><input type="text" id="b_offer_desc" placeholder="New customers only. Expires April 30."></div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px">
+      <button onclick="fillOffer('10% Off','10%','off any service')" style="padding:6px 10px;background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#aaa;font-size:11px;cursor:pointer;font-family:inherit">💰 10% Off</button>
+      <button onclick="fillOffer('$25 Off','$25','off next visit')" style="padding:6px 10px;background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#aaa;font-size:11px;cursor:pointer;font-family:inherit">💵 $25 Off</button>
+      <button onclick="fillOffer('Free Estimate','FREE','estimate or inspection')" style="padding:6px 10px;background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#aaa;font-size:11px;cursor:pointer;font-family:inherit">🎁 Free Estimate</button>
+      <button onclick="fillOffer('Refer a Friend','$25','off for both of you')" style="padding:6px 10px;background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#aaa;font-size:11px;cursor:pointer;font-family:inherit">🤝 Referral</button>
+    </div>
+  </div>
+
   <button class="generate-btn" onclick="generateCard()">⚡ Generate My TapCard</button>
-  <a href="https://rbo.autorephero.com" target="_blank" style="display:block;text-align:center;padding:14px;background:none;border:1px dashed #34d399;border-radius:14px;color:#34d399;font-size:14px;font-weight:600;text-decoration:none;margin-top:8px">🎁 Create a Special Offer Too →</a>
 </div>
 
 <div class="qr-overlay" id="qrOverlay" onclick="closeQR()">
@@ -565,6 +583,12 @@ function updateBuilderType() {
   else nameLabel.textContent = 'Business Name';
 }
 
+function fillOffer(headline, value, sub) {
+  document.getElementById('b_offer_headline').value = headline;
+  document.getElementById('b_offer_value').value = value;
+  document.getElementById('b_offer_sub').value = sub;
+}
+
 function generateCard() {
   const name = document.getElementById('b_name').value || 'My TapCard';
   const title = document.getElementById('b_title').value || '';
@@ -612,6 +636,15 @@ function generateCard() {
     links.push({ icon: '🌐', bg: '#1e3a5f', label: 'Website', sub: website.replace(/https?:\/\/(www\.)?/,''), href: website });
   }
   
+  // Add offer link if filled in
+  const offerHeadline = document.getElementById('b_offer_headline').value.trim();
+  const offerValue = document.getElementById('b_offer_value').value.trim();
+  const offerSub = document.getElementById('b_offer_sub').value.trim();
+  if (offerHeadline) {
+    const offerSlug = name.toLowerCase().replace(/[^a-z0-9]+/g,'-') + '-offer';
+    links.unshift({ icon: '🎁', bg: '#166534', label: offerHeadline, sub: offerValue ? offerValue + ' ' + offerSub : 'Special offer', href: 'https://rbo.autorephero.com/' + offerSlug });
+  }
+
   // Build details
   const details = [];
   if (address) details.push({ icon: '📍', text: address });
