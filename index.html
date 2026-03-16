@@ -201,6 +201,7 @@ body{font-family:'Inter',sans-serif;background:#0a0a0a;color:#fff;min-height:100
   <button class="add-link" onclick="addLinkField()" style="font-size:14px;padding:14px">+ Add another link</button>
   
   <button class="generate-btn" onclick="generateCard()">⚡ Generate My TapCard</button>
+  <a href="https://rbo.autorephero.com" target="_blank" style="display:block;text-align:center;padding:14px;background:none;border:1px dashed #34d399;border-radius:14px;color:#34d399;font-size:14px;font-weight:600;text-decoration:none;margin-top:8px">🎁 Create a Special Offer Too →</a>
 </div>
 
 <div class="qr-overlay" id="qrOverlay" onclick="closeQR()">
@@ -342,6 +343,7 @@ function renderCard(d) {
       ${d.details.map(dt => `<div class="detail-row"><span class="di">${dt.icon}</span>${linkifyDetail(dt)}</div>`).join('')}
     </div>
     <div class="share-bar">
+      <a href="https://rbo.autorephero.com" target="_blank" class="share-btn" style="background:linear-gradient(135deg,#22c55e,#15803d);color:#fff;text-decoration:none;text-align:center;font-weight:700">🎁 Create a Special Offer</a>
       <div style="text-align:center;padding:4px 8px;background:#111;border-radius:8px;margin-bottom:4px">
         <span style="font-size:11px;color:#666">Your card link: </span>
         <span style="font-size:12px;color:#3b82f6;word-break:break-all">${d.url}</span>
@@ -351,9 +353,6 @@ function renderCard(d) {
       <button class="share-btn save" onclick='saveContact(${JSON.stringify(d.vcard).replace(/'/g,"&#39;")})'>📇 Save to My Contacts</button>
       <div style="text-align:center;font-size:10px;color:#444;text-transform:uppercase;letter-spacing:1px;margin:4px 0">— Card Owner —</div>
       <button class="share-btn secondary" onclick='addToHomeScreen("${d.name}")'>📲 Add Shortcut to My Phone</button>
-    </div>
-    <div style="text-align:center;padding:8px 20px">
-      <a href="https://rbo.autorephero.com" target="_blank" style="display:inline-block;padding:10px 20px;background:#1a1a1a;border:1px solid #333;border-radius:10px;color:#34d399;font-size:12px;font-weight:600;text-decoration:none">🎁 Create a Special Offer for Your Customers →</a>
     </div>
     <div class="powered-by">Powered by <a href="https://autorephero.com">AutoRepHero</a></div>
   `;
