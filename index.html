@@ -17,6 +17,7 @@
 <link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBdLY6yPpNZFD7AB2dPECsznDNTFpiRuwU&libraries=places&callback=initPlaces"></script>
 
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -583,12 +584,39 @@ function formatPhone(input) {
   else if (v.length > 0) input.value = '(' + v;
 }
 
+let placesAutocomplete = null;
+let placesService = null;
+
+function initPlaces() {
+  const input = document.getElementById('bizSearch');
+  if (!input || !google?.maps?.places) return;
+  placesAutocomplete = new google.maps.places.Autocomplete(input, {
+    types: ['establishment'],
+    fields: ['name', 'formatted_address', 'formatted_phone_number', 'website', 'geometry', 'address_components', 'url']
+  });
+  placesAutocomplete.addListener('place_changed', () => {
+    const place = placesAutocomplete.getPlace();
+    if (!place.name) return;
+    document.getElementById('b_name').value = place.name || '';
+    document.getElementById('b_address').value = place.formatted_address || '';
+    document.getElementById('b_phone').value = place.formatted_phone_number || '';
+    document.getElementById('b_website').value = place.website || '';
+    // Auto-set title
+    const city = (place.address_components || []).find(c => c.types.includes('locality'));
+    const state = (place.address_components || []).find(c => c.types.includes('administrative_area_level_1'));
+    if (city && state) {
+      document.getElementById('b_title').value = city.long_name + ', ' + state.short_name;
+    }
+    // Format phone if exists
+    const phoneInput = document.getElementById('b_phone');
+    if (phoneInput.value) formatPhone(phoneInput);
+    document.getElementById('searchResults').classList.remove('active');
+  });
+}
+
 function searchBiz(q) {
-  const sr = document.getElementById('searchResults');
-  if (q.length < 3) { sr.classList.remove('active'); return; }
-  // Use Google Places Autocomplete API (needs key) or fallback
-  sr.innerHTML = '<div class="search-result" onclick="fillFromSearch(this)"><div class="sr-name">🔍 Searching requires Google Places API key</div><div class="sr-addr">Enter details manually below for now</div></div>';
-  sr.classList.add('active');
+  // Google Places Autocomplete handles this via the input binding
+  // The dropdown is native Google UI
 }
 
 function fillFromSearch(el) {
