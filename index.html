@@ -117,7 +117,7 @@ body{font-family:'Inter',sans-serif;background:#0a0a0a;color:#fff;min-height:100
 </head>
 <body>
 
-<div style="text-align:center;padding:10px 12px 0;font-size:11px;color:#666;text-transform:uppercase;letter-spacing:1.5px;font-weight:600">TapHero Examples</div>
+<div style="text-align:center;padding:10px 12px 0;font-size:11px;color:#666;text-transform:uppercase;letter-spacing:1.5px;font-weight:600">Rapid Business Card Examples</div>
 <div class="demo-switcher">
   <button class="demo-switch active" onclick="showDemo('church')">⛪ Church</button>
   <button class="demo-switch" onclick="showDemo('business')">🏢 Business</button>
@@ -232,7 +232,7 @@ const DEMOS = {
       { icon: '📧', text: 'info.zealchurchwa@gmail.com' },
       { icon: '🌐', text: 'zealchurchwa.com' },
     ],
-    url: 'https://tap.autorephero.com/zeal-church',
+    url: 'https://rbc.autorephero.com/zeal-church',
     vcard: { fn: 'Zeal Church', org: 'Zeal Church', tel: '', email: 'info.zealchurchwa@gmail.com', adr: '159 S Lincoln St, Spokane, WA', url: 'https://www.zealchurchwa.com' }
   },
   business: {
@@ -265,7 +265,7 @@ const DEMOS = {
       { icon: '📧', text: 'chuck@autorephero.com' },
       { icon: '🌐', text: 'autorephero.com' },
     ],
-    url: 'https://tap.autorephero.com/autorephero',
+    url: 'https://rbc.autorephero.com/autorephero',
     vcard: { fn: 'AutoRepHero', org: 'AutoRepHero', tel: '+15098180787', email: 'chuck@autorephero.com', adr: 'Spokane, WA', url: 'https://autorephero.com' }
   },
   personal: {
@@ -297,7 +297,7 @@ const DEMOS = {
       { icon: '📧', text: 'chuck@autorephero.com' },
       { icon: '🌐', text: 'autorephero.com' },
     ],
-    url: 'https://tap.autorephero.com/chuck',
+    url: 'https://rbc.autorephero.com/chuck',
     vcard: { fn: 'Chuck Zaagsma', org: 'AutoRepHero', tel: '+15098180787', email: 'chuck@autorephero.com', adr: 'Spokane, WA', url: 'https://autorephero.com' }
   }
 };
@@ -618,7 +618,7 @@ function generateCard() {
     actions: actions,
     links: links,
     details: details,
-    url: 'https://tap.autorephero.com/' + slug,
+    url: 'https://rbc.autorephero.com/' + slug,
     vcard: { fn: name, org: name, tel: phone.replace(/\D/g,'').replace(/^(\d{10})$/,'+1$1'), email: email, adr: address, url: website }
   };
   
