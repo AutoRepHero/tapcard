@@ -775,6 +775,10 @@ function generateCard() {
   document.getElementById('builder').classList.remove('active');
   document.getElementById('cardContainer').style.display = 'flex';
   renderCard(card);
+  // Scroll to the card
+  setTimeout(() => {
+    document.getElementById('cardContainer').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 100);
 }
 
 // Init
