@@ -158,7 +158,7 @@ body{font-family:'Inter',sans-serif;background:#0a0a0a;color:#fff;min-height:100
 <div class="card-container" id="cardContainer"></div>
 
 <div class="builder" id="builder">
-  <h2>Create Your TapCard</h2>
+  <h2>Create Your Rapid Business Card</h2>
   <p class="sub">Search for your business or enter details manually</p>
   
   <div class="search-wrap">
@@ -443,7 +443,7 @@ function linkifyDetail(dt) {
 
 function shareCard(url, name) {
   if (navigator.share) {
-    navigator.share({ title: name + ' — TapCard', url: url }).catch(() => {});
+    navigator.share({ title: name + ' — Rapid Business Card', url: url }).catch(() => {});
   } else {
     navigator.clipboard.writeText(url).then(() => {
       alert('Link copied!\n\n' + url);
@@ -490,13 +490,13 @@ function addToHomeScreen(name) {
       '1. Tap the <b>Share</b> button <span style="font-size:18px">⬆️</span> at the bottom<br>' +
       '2. Scroll down and tap <b>"Add to Home Screen"</b><br>' +
       '3. Tap <b>"Add"</b> in the top right<br><br>' +
-      '<span style="color:#888;font-size:12px">Your TapCard will appear as an app icon!</span></div>';
+      '<span style="color:#888;font-size:12px">Your Rapid Business Card will appear as an app icon!</span></div>';
   } else {
     sub.innerHTML = '<div style="text-align:left;font-size:14px;line-height:2;color:#333">' +
       '1. Tap the <b>⋮ menu</b> (top right of browser)<br>' +
       '2. Tap <b>"Add to Home Screen"</b> or <b>"Install App"</b><br>' +
       '3. Tap <b>"Add"</b><br><br>' +
-      '<span style="color:#888;font-size:12px">Your TapCard will appear as an app icon!</span></div>';
+      '<span style="color:#888;font-size:12px">Your Rapid Business Card will appear as an app icon!</span></div>';
   }
   modal.classList.add('active');
 }
@@ -677,7 +677,7 @@ function fillOffer(headline, value, sub) {
 }
 
 function generateCard() {
-  const name = document.getElementById('b_name').value || 'My TapCard';
+  const name = document.getElementById('b_name').value || 'My Rapid Business Card';
   const title = document.getElementById('b_title').value || '';
   const desc = document.getElementById('b_desc').value || '';
   const phone = document.getElementById('b_phone').value || '';
