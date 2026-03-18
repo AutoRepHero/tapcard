@@ -596,52 +596,45 @@ const PLACES_KEY = 'AIzaSyBdLY6yPpNZFD7AB2dPECsznDNTFpiRuwU';
 let searchTimeout = null;
 
 function searchBizPlaces(q) {
-  const sr = document.getElementById('searchResults');
+  var sr = document.getElementById('searchResults');
   if (q.length < 3) { sr.classList.remove('active'); sr.innerHTML = ''; return; }
   clearTimeout(searchTimeout);
-  searchTimeout = setTimeout(async () => {
-    try {
-      const proxy = 'https://corsproxy.io/?';
-      const url = `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${encodeURIComponent(q)}&types=establishment&key=${PLACES_KEY}`;
-      const res = await fetch(proxy + encodeURIComponent(url));
-      const data = await res.json();
-      if (data.predictions && data.predictions.length > 0) {
-        sr.innerHTML = data.predictions.slice(0, 5).map(p =>
-          `<div class="search-result" onclick="selectPlace('${p.place_id}')">
-            <div class="sr-name">${p.structured_formatting.main_text}</div>
-            <div class="sr-addr">${p.structured_formatting.secondary_text || ''}</div>
-          </div>`
-        ).join('');
-        sr.classList.add('active');
-      } else {
-        sr.classList.remove('active');
-      }
-    } catch(e) { sr.classList.remove('active'); }
+  searchTimeout = setTimeout(function() {
+    fetch('/api/places?q=' + encodeURIComponent(q))
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        if (data.predictions && data.predictions.length > 0) {
+          sr.innerHTML = data.predictions.slice(0, 5).map(function(p) {
+            return '<div class="search-result" onclick="selectPlace(\'' + p.place_id + '\')">' +
+              '<div class="sr-name">' + p.structured_formatting.main_text + '</div>' +
+              '<div class="sr-addr">' + (p.structured_formatting.secondary_text || '') + '</div></div>';
+          }).join('');
+          sr.classList.add('active');
+        } else { sr.classList.remove('active'); }
+      }).catch(function() { sr.classList.remove('active'); });
   }, 300);
 }
 
-async function selectPlace(placeId) {
-  const sr = document.getElementById('searchResults');
+function selectPlace(placeId) {
+  var sr = document.getElementById('searchResults');
   sr.classList.remove('active');
-  try {
-    const proxy = 'https://corsproxy.io/?';
-    const url = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${placeId}&fields=name,formatted_address,formatted_phone_number,website,address_components&key=${PLACES_KEY}`;
-    const res = await fetch(proxy + encodeURIComponent(url));
-    const data = await res.json();
-    if (data.result) {
-      const r = data.result;
-      document.getElementById('b_name').value = r.name || '';
-      document.getElementById('b_address').value = r.formatted_address || '';
-      document.getElementById('b_phone').value = r.formatted_phone_number || '';
-      document.getElementById('b_website').value = r.website || '';
-      const city = (r.address_components || []).find(c => c.types.includes('locality'));
-      const state = (r.address_components || []).find(c => c.types.includes('administrative_area_level_1'));
-      if (city && state) document.getElementById('b_title').value = city.long_name + ', ' + state.short_name;
-      const phoneInput = document.getElementById('b_phone');
-      if (phoneInput.value) formatPhone(phoneInput);
-      document.getElementById('bizSearch').value = r.name;
-    }
-  } catch(e) { console.error('Place details error:', e); }
+  fetch('/api/places?placeId=' + placeId)
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      if (data.result) {
+        var r = data.result;
+        document.getElementById('b_name').value = r.name || '';
+        document.getElementById('b_address').value = r.formatted_address || '';
+        document.getElementById('b_phone').value = r.formatted_phone_number || '';
+        document.getElementById('b_website').value = r.website || '';
+        var city = (r.address_components || []).find(function(c) { return c.types.includes('locality'); });
+        var state = (r.address_components || []).find(function(c) { return c.types.includes('administrative_area_level_1'); });
+        if (city && state) document.getElementById('b_title').value = city.long_name + ', ' + state.short_name;
+        var phoneInput = document.getElementById('b_phone');
+        if (phoneInput.value) formatPhone(phoneInput);
+        document.getElementById('bizSearch').value = r.name;
+      }
+    }).catch(function(e) { console.error('Place details error:', e); });
 }
 
 function fillFromSearch(el) {
