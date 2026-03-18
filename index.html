@@ -782,7 +782,31 @@ function generateCard() {
 }
 
 // Init
-renderCard(DEMOS.church);
+// Check for RBO offer params — auto-open builder with offer pre-filled
+(function() {
+  var p = new URLSearchParams(window.location.search);
+  if (p.has('builder')) {
+    // Open builder
+    setTimeout(function() {
+      showBuilder();
+      // Pre-fill business info if provided
+      if (p.get('biz')) document.getElementById('b_name').value = p.get('biz');
+      if (p.get('phone')) { document.getElementById('b_phone').value = p.get('phone'); formatPhone(document.getElementById('b_phone')); }
+      if (p.get('website')) document.getElementById('b_website').value = p.get('website');
+      // Pre-fill offer
+      if (p.get('offer_h')) {
+        document.getElementById('offerToggle').style.display = 'none';
+        document.getElementById('offerFields').style.display = 'block';
+        document.getElementById('b_offer_headline').value = p.get('offer_h') || '';
+        document.getElementById('b_offer_value').value = p.get('offer_v') || '';
+        document.getElementById('b_offer_sub').value = p.get('offer_s') || '';
+        document.getElementById('b_offer_desc').value = p.get('offer_d') || '';
+      }
+    }, 200);
+  } else {
+    renderCard(DEMOS.church);
+  }
+})();
 </script>
 </body>
 </html>
