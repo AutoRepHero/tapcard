@@ -5,931 +5,839 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>⚡ Rapid Business Card ⚡ — AutoRepHero</title>
-<meta property="og:title" content="My ⚡ Rapid Business Card ⚡ — Tap to Connect">
-<meta property="og:description" content="Save my contact info, find us on social media, and connect instantly.">
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://rbc.autorephero.com">
-<meta property="og:image" content="https://rbc.autorephero.com/autorephero-logo.jpg">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="My ⚡ Rapid Business Card ⚡ — Tap to Connect">
-<meta name="twitter:description" content="Save my contact info, find us on social media, and connect instantly.">
-<link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
-<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-
-
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0a0a0a">
+<link rel="manifest" href="manifest.json">
+<title>⚡ Rapid Business Contact ⚡</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%233b82f6'/><text x='50' y='58' font-size='60' text-anchor='middle' dominant-baseline='middle'>⚡</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{--radius:16px}
-body{font-family:'Inter',sans-serif;background:#0a0a0a;color:#fff;min-height:100vh;min-height:100dvh;overflow-x:hidden}
-.card-container{max-width:420px;margin:0 auto;min-height:100vh;min-height:100dvh;display:flex;flex-direction:column}
+:root{--bg:#0a0a0a;--card:#141414;--card2:#1a1a1a;--accent:#3b82f6;--gold:#f59e0b;--green:#22c55e;--text:#fff;--text2:#aaa;--text3:#666;--radius:16px;--locked:#333}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+.container{max-width:480px;margin:0 auto;padding:16px;min-height:100vh}
 
-/* Header / Cover */
-.card-cover{position:relative;height:180px;overflow:hidden}
-.card-cover img{width:100%;height:100%;object-fit:cover}
-.card-cover-overlay{position:absolute;inset:0;background:linear-gradient(transparent 40%,rgba(0,0,0,0.85))}
+/* Mode Toggle */
+.mode-toggle{display:flex;gap:4px;background:var(--card);border-radius:12px;padding:4px;margin-bottom:20px}
+.mode-btn{flex:1;padding:10px;border:none;border-radius:10px;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;transition:all 0.2s;color:var(--text3);background:transparent}
+.mode-btn.active{background:var(--accent);color:#fff}
 
-/* Avatar */
-.card-avatar-wrap{display:flex;justify-content:center;margin-top:-50px;position:relative;z-index:2}
-.card-avatar{width:100px;height:100px;border-radius:50%;border:4px solid #1a1a1a;overflow:hidden;background:#222}
-.card-avatar img{width:100%;height:100%;object-fit:cover}
-.card-avatar.icon{display:flex;align-items:center;justify-content:center;font-size:48px}
+/* Section Cards */
+.section{border-radius:var(--radius);overflow:hidden;margin-bottom:12px;transition:all 0.3s}
+.section.locked{opacity:0.4;pointer-events:none;filter:grayscale(0.5)}
+.section.locked .section-header::after{content:'🔒';position:absolute;right:16px;top:50%;transform:translateY(-50%);font-size:16px}
+.section.completed .section-header::after{content:'✅';position:absolute;right:16px;top:50%;transform:translateY(-50%);font-size:16px}
+.section-header{position:relative;padding:16px 20px;cursor:pointer;display:flex;align-items:center;gap:12px;transition:background 0.2s}
+.section-header:hover{filter:brightness(1.1)}
+.section-icon{font-size:20px;width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.section-title{font-weight:700;font-size:15px;letter-spacing:-0.3px}
+.section-subtitle{font-size:11px;color:var(--text2);margin-top:2px}
+.section-body{padding:0 20px 20px;display:none}
+.section.open .section-body{display:block}
 
-/* Info */
-.card-info{text-align:center;padding:12px 20px 0}
-.card-name{font-size:24px;font-weight:800;letter-spacing:-0.5px}
-.card-title{font-size:14px;color:#999;margin-top:2px;font-weight:400}
-.card-tagline{font-size:13px;color:#bbb;margin-top:8px;line-height:1.5;padding:0 10px}
+/* Card Section */
+.s-card .section-header{background:linear-gradient(135deg,#1e3a5f,#0d1b2a)}
+.s-card .section-icon{background:rgba(59,130,246,0.2)}
+/* Offer Section */
+.s-offer .section-header{background:linear-gradient(135deg,#5b2100,#2a1000)}
+.s-offer .section-icon{background:rgba(245,158,11,0.2)}
+/* Follow Section */
+.s-follow .section-header{background:linear-gradient(135deg,#1a0a3e,#2d1b69)}
+.s-follow .section-icon{background:rgba(139,92,246,0.2)}
+/* Reviews Section */
+.s-reviews .section-header{background:linear-gradient(135deg,#1a4731,#0a1f14)}
+.s-reviews .section-icon{background:rgba(34,197,94,0.2)}
+/* Text Club Section */
+.s-textclub .section-header{background:linear-gradient(135deg,#4a1942,#2d1025)}
+.s-textclub .section-icon{background:rgba(236,72,153,0.2)}
 
-/* Quick Actions */
-.card-actions{display:flex;justify-content:center;gap:12px;padding:16px 20px}
-.action-btn{display:flex;flex-direction:column;align-items:center;gap:4px;text-decoration:none;color:#fff;width:70px}
-.action-btn .icon-circle{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;transition:transform 0.2s}
-.action-btn:active .icon-circle{transform:scale(0.92)}
-.action-btn span{font-size:10px;color:#999;font-weight:500}
+/* Form Elements */
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:12px;font-weight:600;color:var(--text2);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.5px}
+.form-input{width:100%;padding:12px 14px;background:var(--card);border:1px solid #333;border-radius:10px;color:var(--text);font-family:inherit;font-size:14px;transition:border 0.2s}
+.form-input:focus{outline:none;border-color:var(--accent)}
+.form-input::placeholder{color:var(--text3)}
+textarea.form-input{resize:vertical;min-height:60px}
+.form-row{display:flex;gap:10px}
+.form-row .form-group{flex:1}
 
-/* Links */
-.card-links{padding:8px 20px;display:flex;flex-direction:column;gap:8px}
-.link-item{display:flex;align-items:center;gap:12px;padding:14px 16px;background:#1a1a1a;border-radius:14px;text-decoration:none;color:#fff;transition:background 0.2s}
-.link-item:active{background:#252525}
-.link-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
-.link-text{flex:1}
-.link-text .label{font-size:14px;font-weight:600}
-.link-text .sub{font-size:11px;color:#888;margin-top:1px}
-.link-arrow{color:#555;font-size:14px}
+/* Upload */
+.upload-zone{border:2px dashed #333;border-radius:12px;padding:24px;text-align:center;cursor:pointer;transition:all 0.2s;position:relative;overflow:hidden}
+.upload-zone:hover{border-color:var(--accent);background:rgba(59,130,246,0.05)}
+.upload-zone img{width:80px;height:80px;border-radius:50%;object-fit:cover;margin:0 auto 8px}
+.upload-zone .upload-text{font-size:13px;color:var(--text2)}
+.upload-zone .upload-text span{color:var(--accent);font-weight:600}
 
-/* Details */
-.card-details{padding:16px 20px;display:flex;flex-direction:column;gap:6px}
-.detail-row{display:flex;align-items:center;gap:10px;font-size:13px;color:#aaa}
-.detail-row .di{width:20px;text-align:center}
+/* Buttons */
+.btn{width:100%;padding:14px;border:none;border-radius:12px;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn:active{transform:scale(0.97)}
+.btn-primary{background:var(--accent);color:#fff}
+.btn-gold{background:var(--gold);color:#000}
+.btn-green{background:var(--green);color:#fff}
+.btn-outline{background:transparent;color:var(--text2);border:1px solid #333}
 
-/* Share Bar */
-.share-bar{padding:16px 20px 24px;display:flex;flex-direction:column;gap:10px;margin-top:auto}
-.share-btn{width:100%;padding:16px;border:none;border-radius:14px;font-family:inherit;font-size:15px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:transform 0.2s}
-.share-btn:active{transform:scale(0.97)}
-.share-btn.primary{background:#fff;color:#000}
-.share-btn.secondary{background:#1a1a1a;color:#fff;border:1px solid #333}
-.share-btn.save{background:#22c55e;color:#fff}
+/* Social Chips */
+.social-chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.social-chip{padding:8px 14px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid #333;background:var(--card);color:var(--text2);transition:all 0.2s}
+.social-chip.active{border-color:var(--accent);color:var(--accent);background:rgba(59,130,246,0.1)}
+
+/* Customer View */
+.customer-section{background:var(--card);border-radius:var(--radius);padding:20px;margin-bottom:12px}
+.customer-section h3{font-size:16px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.quick-actions{display:flex;justify-content:center;gap:16px;margin:16px 0}
+.quick-action{display:flex;flex-direction:column;align-items:center;gap:4px;text-decoration:none;color:var(--text)}
+.quick-action .qa-icon{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;transition:transform 0.2s}
+.quick-action:active .qa-icon{transform:scale(0.9)}
+.quick-action span{font-size:10px;color:var(--text2)}
+
+/* Offer Card */
+.offer-display{background:linear-gradient(135deg,#f59e0b22,#f59e0b08);border:1px solid #f59e0b33;border-radius:14px;padding:20px;text-align:center}
+.offer-display .offer-title{font-size:20px;font-weight:800;color:var(--gold)}
+.offer-display .offer-sub{font-size:13px;color:var(--text2);margin-top:4px}
+.offer-display .offer-btn{margin-top:16px;display:inline-block;padding:12px 28px;background:var(--gold);color:#000;font-weight:700;border-radius:12px;border:none;font-family:inherit;font-size:14px;cursor:pointer}
+
+/* Platform Buttons */
+.platform-btn{display:flex;align-items:center;gap:12px;padding:14px;background:var(--card2);border-radius:12px;margin-bottom:8px;cursor:pointer;border:none;width:100%;color:var(--text);font-family:inherit;transition:all 0.2s;text-decoration:none}
+.platform-btn:active{transform:scale(0.98)}
+.platform-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;flex-shrink:0}
+.platform-name{font-weight:600;font-size:14px}
+.platform-sub{font-size:11px;color:var(--text3)}
 
 /* QR Modal */
-.qr-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.85);display:none;align-items:center;justify-content:center;z-index:100;backdrop-filter:blur(10px)}
-.qr-overlay.active{display:flex}
-.qr-modal{background:#fff;border-radius:24px;padding:32px;text-align:center;max-width:320px;width:90%}
-.qr-modal h3{color:#000;font-size:18px;margin-bottom:4px}
-.qr-modal p{color:#666;font-size:12px;margin-bottom:16px}
-.qr-modal canvas{border-radius:12px}
-.qr-close{margin-top:16px;padding:10px 32px;border:none;background:#000;color:#fff;border-radius:10px;font-family:inherit;font-weight:600;cursor:pointer}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.85);display:none;align-items:center;justify-content:center;z-index:100;backdrop-filter:blur(10px)}
+.modal-overlay.active{display:flex}
+.modal{background:#fff;border-radius:24px;padding:32px;text-align:center;max-width:320px;width:90%}
+.modal h3{color:#000;font-size:18px;margin-bottom:4px}
+.modal p{color:#666;font-size:12px;margin-bottom:16px}
+.modal canvas{border-radius:12px}
+.modal-close{margin-top:16px;padding:10px 32px;border:none;background:#000;color:#fff;border-radius:10px;font-family:inherit;font-weight:600;cursor:pointer}
 
-/* Demo Switcher */
-.demo-switcher{position:fixed;top:32px;right:0;left:0;z-index:50;display:flex;gap:6px;justify-content:center;flex-wrap:wrap;padding:0 12px}
-.demo-switch{padding:6px 12px;border:1px solid #333;background:#1a1a1a;color:#fff;border-radius:8px;font-family:inherit;font-size:11px;font-weight:600;cursor:pointer}
-.demo-switch.active{background:#fff;color:#000;border-color:#fff}
-.dismissButton,.gm-err-container,.gm-style-mot{display:none!important}
-.pac-container{z-index:9999!important;background:#1a1a1a!important;border:1px solid #333!important;border-radius:10px!important;margin-top:4px!important;font-family:Inter,sans-serif!important}
-.pac-item{padding:10px 14px!important;border-bottom:1px solid #222!important;color:#ddd!important;cursor:pointer!important;font-size:13px!important}
-.pac-item:hover{background:#252525!important}
-.pac-item-query{color:#fff!important;font-weight:600!important}
-.pac-matched{color:#34d399!important}
-.pac-icon{display:none!important}
-.powered-by{text-align:center;padding:12px;font-size:13px;color:#888}
-.powered-by a{color:#999;text-decoration:none;font-weight:500}
-.powered-by a:active{color:#34d399}
+.powered-by{text-align:center;padding:20px 0 30px;font-size:11px;color:#333}
+.powered-by a{color:#555;text-decoration:none}
 
-/* Shop / Services Section */
-.shop-section{padding:16px 20px}
-.shop-section-title{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#888;margin-bottom:12px}
-.shop-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.shop-item{background:#1a1a1a;border-radius:14px;overflow:hidden;cursor:pointer;transition:transform 0.15s}
-.shop-item:active{transform:scale(0.96)}
-.shop-item img{width:100%;height:110px;object-fit:cover;display:block}
-.shop-item-info{padding:10px 12px}
-.shop-item-name{font-size:13px;font-weight:700;color:#fff;line-height:1.3}
-.shop-item-desc{font-size:11px;color:#888;margin-top:2px;line-height:1.4}
-.shop-item-price{font-size:13px;font-weight:800;margin-top:6px}
-
-/* Builder */
-.builder{max-width:420px;margin:0 auto;padding:16px 20px;display:none;flex-direction:column;gap:12px}
-.builder.active{display:flex}
-.builder h2{font-size:20px;font-weight:800;text-align:center;margin:8px 0}
-.builder p.sub{font-size:12px;color:#888;text-align:center;margin-bottom:8px}
-.builder .search-wrap{position:relative}
-.builder .search-wrap input{width:100%;padding:14px 16px 14px 40px;background:#1a1a1a;border:1px solid #333;border-radius:12px;color:#fff;font-family:inherit;font-size:14px}
-.builder .search-wrap input:focus{outline:none;border-color:#3b82f6}
-.builder .search-wrap::before{content:'🔍';position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:16px}
-.builder .search-results{background:#1a1a1a;border:1px solid #333;border-radius:12px;max-height:200px;overflow-y:auto;display:none}
-.builder .search-results.active{display:block}
-.builder .search-result{padding:12px 16px;cursor:pointer;border-bottom:1px solid #222}
-.builder .search-result:hover,.builder .search-result:active{background:#252525}
-.builder .search-result .sr-name{font-size:14px;font-weight:600}
-.builder .search-result .sr-addr{font-size:11px;color:#888}
-.builder .divider{display:flex;align-items:center;gap:12px;color:#555;font-size:11px;text-transform:uppercase;letter-spacing:1px;margin:4px 0}
-.builder .divider::before,.builder .divider::after{content:'';flex:1;height:1px;background:#333}
-.builder .field{display:flex;flex-direction:column;gap:3px}
-.builder .field label{font-size:11px;color:#888;font-weight:500}
-.builder .field input,.builder .field select,.builder .field textarea{width:100%;padding:12px 14px;background:#1a1a1a;border:1px solid #333;border-radius:10px;color:#fff;font-family:inherit;font-size:13px}
-.builder .field input:focus,.builder .field select:focus,.builder .field textarea:focus{outline:none;border-color:#3b82f6}
-.builder .field textarea{resize:vertical;min-height:60px}
-.builder .field-row{display:flex;gap:8px}
-.builder .field-row .field{flex:1}
-.builder .section-label{font-size:12px;font-weight:700;color:#666;text-transform:uppercase;letter-spacing:0.5px;margin-top:8px}
-.builder .link-fields{display:flex;flex-direction:column;gap:6px}
-.builder .link-field{display:flex;flex-direction:column;gap:6px}
-.builder .link-field input{flex:1}
-.builder .link-field select{width:100%;flex-shrink:0;font-size:15px;padding:12px 8px}
-.builder .add-link{padding:10px;background:none;border:1px dashed #444;border-radius:10px;color:#888;font-family:inherit;cursor:pointer;font-size:12px}
-.builder .add-link:hover{border-color:#3b82f6;color:#3b82f6}
-.builder .generate-btn{padding:16px;background:#22c55e;color:#fff;border:none;border-radius:14px;font-family:inherit;font-size:16px;font-weight:700;cursor:pointer;position:sticky;bottom:16px;z-index:50;box-shadow:0 -4px 20px rgba(0,0,0,0.5)}
-.builder .generate-btn:active{transform:scale(0.97)}
-.builder .color-row{display:flex;gap:8px;flex-wrap:wrap}
-.builder .color-swatch{width:36px;height:36px;border-radius:50%;cursor:pointer;border:3px solid transparent;transition:border 0.2s}
-.builder .color-swatch.active{border-color:#fff}
+/* Claim Modal */
+.claim-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.85);display:none;align-items:flex-end;justify-content:center;z-index:100;backdrop-filter:blur(10px)}
+.claim-overlay.active{display:flex}
+.claim-sheet{background:var(--card);border-radius:24px 24px 0 0;padding:28px 24px 40px;width:100%;max-width:480px;max-height:85vh;overflow-y:auto}
+.claim-sheet h3{font-size:18px;font-weight:800;margin-bottom:4px}
+.claim-sheet .claim-sub{font-size:13px;color:var(--text2);margin-bottom:20px}
 </style>
 </head>
 <body>
 
-<div style="position:fixed;top:0;left:0;right:0;z-index:60;background:#0a0a0a;border-bottom:1px solid #222;padding:10px 16px;text-align:center">
-  <div style="font-size:18px;font-weight:900;color:#fff;letter-spacing:-0.5px;font-family:Inter,sans-serif">⚡ Rapid Business Card ⚡</div>
-  <div style="font-size:10px;color:#888;margin-top:1px">Your digital identity — share instantly with anyone</div>
-  <button onclick="showBuilder()" style="margin-top:6px;padding:8px 24px;background:#22c55e;color:#000;border:none;border-radius:8px;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer">Create My ⚡ Rapid Business Card ⚡</button>
-</div>
-<div style="height:150px"></div>
-<div style="position:fixed;top:90px;left:0;right:0;z-index:55;background:#0a0a0a;padding:6px 20px 8px;border-bottom:1px solid #1a1a1a">
-  <div style="display:flex;align-items:center;gap:12px;margin-bottom:6px">
-    <div style="flex:1;height:1px;background:#333"></div>
-    <span style="font-size:10px;color:#555;text-transform:uppercase;letter-spacing:1.5px;font-weight:600">Examples</span>
-    <div style="flex:1;height:1px;background:#333"></div>
-  </div>
-  <div style="display:flex;gap:6px;justify-content:center;flex-wrap:wrap">
-  <button class="demo-switch active" onclick="showDemo('church')">⛪ Church</button>
-  <button class="demo-switch" onclick="showDemo('business')"><img src="autorephero-logo.jpg" style="width:14px;height:14px;border-radius:3px;vertical-align:middle"> Business</button>
-  <button class="demo-switch" onclick="showDemo('personal')">👤 Personal</button>
-  <button class="demo-switch" onclick="showDemo('landscape')">🌿 Landscape</button>
-  <button class="demo-switch" onclick="showDemo('housekeeper')">🏠 House Keeper</button>
-  </div>
-</div>
+<div class="container" id="app"></div>
 
-<div class="card-container" id="cardContainer"></div>
-
-<div class="builder" id="builder">
-  <h2 style="line-height:1.3">Create Your<br><span style="font-size:1.2em">⚡ Rapid Business Card ⚡</span></h2>
-  <p class="sub">Search for your business or enter details manually</p>
-  
-  <div class="search-wrap">
-    <input type="text" id="bizSearch" placeholder="Search your business name..." oninput="searchBizPlaces(this.value)" autocomplete="off">
-  </div>
-  <div class="search-results" id="searchResults"></div>
-  
-  <div class="divider">or enter manually</div>
-  
-  <div class="field">
-    <label>Card Type</label>
-    <select id="b_type" onchange="updateBuilderType()">
-      <option value="business">🔧 Business</option>
-      <option value="church">⛪ Church / Organization</option>
-      <option value="personal">👤 Personal</option>
-      <option value="realtor">🏠 Realtor</option>
-    </select>
-  </div>
-  
-  <div class="field"><label>Name</label><input type="text" id="b_name" placeholder="Business or person name"></div>
-  
-  <div class="field"><label>Title / Tagline</label><input type="text" id="b_title" placeholder="Licensed & Insured • Spokane, WA"></div>
-  
-  <div class="field"><label>Description</label><textarea id="b_desc" placeholder="Short description of what you do..."></textarea></div>
-  
-  <div class="field-row">
-    <div class="field"><label>Phone</label><input type="tel" id="b_phone" placeholder="(509) 555-1234" oninput="formatPhone(this)"></div>
-    <div class="field"><label>Email</label><input type="email" id="b_email" placeholder="you@email.com"></div>
-  </div>
-  
-  <div class="field"><label>Address</label><input type="text" id="b_address" placeholder="123 Main St, Spokane, WA"></div>
-  
-  <div class="field"><label>Website</label><input type="url" id="b_website" placeholder="https://yourbusiness.com"></div>
-
-  <div class="section-label">Theme Color</div>
-  <div class="color-row" id="colorRow">
-    <div class="color-swatch active" style="background:#3b82f6" onclick="pickColor('#3b82f6',this)"></div>
-    <div class="color-swatch" style="background:#22c55e" onclick="pickColor('#22c55e',this)"></div>
-    <div class="color-swatch" style="background:#ef4444" onclick="pickColor('#ef4444',this)"></div>
-    <div class="color-swatch" style="background:#f59e0b" onclick="pickColor('#f59e0b',this)"></div>
-    <div class="color-swatch" style="background:#8b5cf6" onclick="pickColor('#8b5cf6',this)"></div>
-    <div class="color-swatch" style="background:#ec4899" onclick="pickColor('#ec4899',this)"></div>
-    <div class="color-swatch" style="background:#14b8a6" onclick="pickColor('#14b8a6',this)"></div>
-    <div class="color-swatch" style="background:#fff" onclick="pickColor('#ffffff',this)"></div>
-  </div>
-  
-  <div class="section-label">Social & Links</div>
-  <div class="link-fields" id="linkFields">
-    <div class="link-field">
-      <select onchange="updateLinkPlaceholder(this)" style="font-size:15px;padding:12px 8px">
-        <option value="facebook">📘 Facebook</option><option value="instagram">📸 Instagram</option><option value="youtube">▶️ YouTube</option><option value="linkedin">💼 LinkedIn</option><option value="tiktok">🎵 TikTok</option><option value="google">⭐ Google Reviews</option><option value="yelp">⭐ Yelp</option><option value="website">🌐 Website</option><option value="other">🔗 Other</option>
-      </select>
-      <div style="display:flex;align-items:center;flex:1;background:#1a1a1a;border:1px solid #333;border-radius:10px;overflow:hidden">
-        <span class="link-prefix" style="padding:0 2px 0 10px;font-size:11px;color:#666;white-space:nowrap">facebook.com/</span>
-        <input type="text" placeholder="yourpage" style="border:none;background:transparent;padding:12px 10px 12px 0;flex:1;min-width:0;color:#fff">
-      </div>
-    </div>
-  </div>
-  <button class="add-link" onclick="addLinkField()" style="font-size:14px;padding:14px">+ Add another link</button>
-  
-  <div class="section-label" style="margin-top:12px">🎁 Special Offer (optional)</div>
-  <div id="offerToggle">
-    <button onclick="document.getElementById('offerToggle').style.display='none';document.getElementById('offerFields').style.display='block'" style="width:100%;padding:16px;background:linear-gradient(135deg,rgba(52,211,153,0.08),rgba(56,189,248,0.08));border:1px dashed #34d399;border-radius:14px;color:#34d399;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit">🎁 Add a ⚡ Rapid Business Offer ⚡ to Your Card</button>
-  </div>
-  <div id="offerFields" style="display:none">
-    <!-- AI Offer Helper -->
-    <div id="offerAI" style="padding:14px 16px;background:linear-gradient(135deg,rgba(52,211,153,0.08),rgba(56,189,248,0.08));border:1px solid rgba(52,211,153,0.2);border-radius:12px;margin-bottom:16px;cursor:pointer" onclick="document.getElementById('offerAIpicker').style.display=document.getElementById('offerAIpicker').style.display==='none'?'block':'none'">
-      <div style="font-size:18px;margin-bottom:4px">🤖</div>
-      <div style="font-size:13px;color:#34d399;font-weight:700">AI Offer Assistant</div>
-      <div style="font-size:11px;color:#666;margin-top:2px">Not sure what to offer? Tell me your business type and I'll suggest the perfect deal.</div>
-    </div>
-    <div id="offerAIpicker" style="display:none;margin-bottom:16px">
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
-        <button onclick="aiOffer('plumber')" style="padding:12px;background:#1a1a1a;border:1px solid #333;border-radius:10px;color:#ddd;font-size:12px;cursor:pointer;font-family:inherit;text-align:left">🔧 Plumber / HVAC</button>
-        <button onclick="aiOffer('roofer')" style="padding:12px;background:#1a1a1a;border:1px solid #333;border-radius:10px;color:#ddd;font-size:12px;cursor:pointer;font-family:inherit;text-align:left">🏠 Roofer / Contractor</button>
-        <button onclick="aiOffer('auto')" style="padding:12px;background:#1a1a1a;border:1px solid #333;border-radius:10px;color:#ddd;font-size:12px;cursor:pointer;font-family:inherit;text-align:left">🔧 Auto Repair</button>
-        <button onclick="aiOffer('carlot')" style="padding:12px;background:#1a1a1a;border:1px solid #333;border-radius:10px;color:#ddd;font-size:12px;cursor:pointer;font-family:inherit;text-align:left">🚗 Car Sales</button>
-        <button onclick="aiOffer('restaurant')" style="padding:12px;background:#1a1a1a;border:1px solid #333;border-radius:10px;color:#ddd;font-size:12px;cursor:pointer;font-family:inherit;text-align:left">🍕 Restaurant</button>
-        <button onclick="aiOffer('salon')" style="padding:12px;background:#1a1a1a;border:1px solid #333;border-radius:10px;color:#ddd;font-size:12px;cursor:pointer;font-family:inherit;text-align:left">💇 Salon / Spa</button>
-        <button onclick="aiOffer('retail')" style="padding:12px;background:#1a1a1a;border:1px solid #333;border-radius:10px;color:#ddd;font-size:12px;cursor:pointer;font-family:inherit;text-align:left">🛍️ Retail / Shop</button>
-        <button onclick="aiOffer('realtor')" style="padding:12px;background:#1a1a1a;border:1px solid #333;border-radius:10px;color:#ddd;font-size:12px;cursor:pointer;font-family:inherit;text-align:left">🏡 Realtor</button>
-        <button onclick="aiOffer('other')" style="padding:12px;background:#1a1a1a;border:1px solid #333;border-radius:10px;color:#ddd;font-size:12px;cursor:pointer;font-family:inherit;text-align:left">📦 Other</button>
-      </div>
-    </div>
-
-    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:#666;margin-bottom:8px">Quick Templates</div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px">
-      <button onclick="fillOffer('10% Off Your First Service!','10%','off any service')" style="padding:10px 14px;background:#1a1a1a;border:1px solid #333;border-radius:10px;color:#ddd;font-size:12px;cursor:pointer;font-family:inherit">💰 10% Off</button>
-      <button onclick="fillOffer('$25 Off Your Next Visit!','$25','off next visit')" style="padding:10px 14px;background:#1a1a1a;border:1px solid #333;border-radius:10px;color:#ddd;font-size:12px;cursor:pointer;font-family:inherit">💵 $25 Off</button>
-      <button onclick="fillOffer('Free Estimate!','FREE','estimate or inspection')" style="padding:10px 14px;background:#1a1a1a;border:1px solid #333;border-radius:10px;color:#ddd;font-size:12px;cursor:pointer;font-family:inherit">🎁 Free Estimate</button>
-      <button onclick="fillOffer('Refer a Friend — Both Save!','$25','off for both of you')" style="padding:10px 14px;background:#1a1a1a;border:1px solid #333;border-radius:10px;color:#ddd;font-size:12px;cursor:pointer;font-family:inherit">🤝 Referral</button>
-    </div>
-
-    <div class="field"><label>Offer Headline</label><input type="text" id="b_offer_headline" placeholder="10% Off Your First Service!"></div>
-    <div class="field-row" style="margin-top:8px">
-      <div class="field"><label>Value</label><input type="text" id="b_offer_value" placeholder="10%"></div>
-      <div class="field"><label>Value Detail</label><input type="text" id="b_offer_sub" placeholder="off any service"></div>
-    </div>
-    <div class="field" style="margin-top:8px"><label>Details / Conditions</label><input type="text" id="b_offer_desc" placeholder="New customers only. Expires April 30."></div>
-  </div>
-
-  <button class="generate-btn" onclick="generateCard()"><span style="display:block;font-size:13px;opacity:0.85">Generate My</span><span style="display:block;font-size:18px;margin-top:2px">⚡ Rapid Business Card ⚡</span></button>
-</div>
-
-<div class="qr-overlay" id="qrOverlay" onclick="closeQR()">
-  <div class="qr-modal" onclick="event.stopPropagation()">
+<div class="modal-overlay" id="qrOverlay" onclick="closeQR()">
+  <div class="modal" onclick="event.stopPropagation()">
     <h3 id="qrTitle">Scan to Connect</h3>
-    <p id="qrSub">Point your camera at the code</p>
+    <p>Point your camera at the code</p>
     <canvas id="qrCanvas"></canvas>
-    <br><button class="qr-close" onclick="closeQR()">Done</button>
+    <br><button class="modal-close" onclick="closeQR()">Done</button>
   </div>
+</div>
+
+<div class="claim-overlay" id="claimOverlay" onclick="closeClaim()">
+  <div class="claim-sheet" onclick="event.stopPropagation()" id="claimSheet"></div>
 </div>
 
 <script>
-const DEMOS = {
-  church: {
-    coverColor: '#1a1a2e',
-    coverGradient: 'linear-gradient(135deg, #e65100 0%, #1a1a2e 100%)',
-    avatar: 'zeal-logo.jpg',
-    avatarType: 'photo',
-    name: 'Zeal Church',
-    title: 'Spokane, WA',
-    tagline: 'His Presence. His Power. His People.',
-    themeColor: '#e65100',
-    actions: [
-      { icon: '📍', label: 'Directions', href: 'https://maps.google.com/?q=159+S+Lincoln+St+Spokane+WA' },
-      { icon: '📧', label: 'Email', href: 'mailto:info.zealchurchwa@gmail.com' },
-      { icon: '🌐', label: 'Website', href: 'https://www.zealchurchwa.com' },
-    ],
-    links: [
-      { icon: '🙏', bg: '#bf360c', label: 'Service Times', sub: 'Sundays at 11:30 AM', href: 'https://www.zealchurchwa.com' },
-      { icon: '📸', bg: '#86198f', label: 'Instagram', sub: 'Follow us', href: 'https://www.instagram.com/zealchurch?igsh=YmliOXNxNWtmb3Rt&utm_source=qr' },
-      { icon: '💝', bg: '#166534', label: 'Give / Donate', sub: 'Support our mission', href: 'https://zeal-church-478146.churchcenter.com/giving' },
-      { icon: '🤝', bg: '#1e40af', label: 'Become a Member', sub: 'Join our community', href: 'https://zealchurch.churchconnectplatform.com/users/sign_in' },
-
-      { icon: '📋', bg: '#4a148c', label: 'Culture Card', sub: 'Who we are & what we believe', href: 'https://drive.google.com/file/d/1WFmvLLR6OCIBCmd8VTO9wOhNd04Eg2Ug/view' },
-    ],
-    details: [
-      { icon: '📍', text: '159 S Lincoln St, Spokane, WA' },
-      { icon: '🕐', text: 'Sundays at 11:30 AM' },
-      { icon: '🙏', text: 'Pastors Ray & Shantel Valdez' },
-      { icon: '📧', text: 'info.zealchurchwa@gmail.com' },
-    ],
-    url: 'https://rbc.autorephero.com/zeal-church',
-    vcard: { fn: 'Zeal Church', org: 'Zeal Church', tel: '', email: 'info.zealchurchwa@gmail.com', adr: '159 S Lincoln St, Spokane, WA', url: 'https://www.zealchurchwa.com' }
+// ===== STATE =====
+const S = {
+  mode: 'builder', // builder or customer
+  step: 0, // 0=card, 1=offer, 2=follow, 3=reviews, 4=textclub
+  completed: new Set(),
+  data: {
+    // Card
+    cardType: 'business',
+    name: '', phone: '', email: '', address: '', website: '', tagline: '',
+    logo: null, logoUrl: '',
+    // Offer
+    offerTitle: '', offerDesc: '', offerExpiry: '', offerExemptions: '',
+    // Follow
+    socials: {},
+    // Reviews
+    reviewPlatforms: {
+      facebook: { enabled: true, url: '' },
+      yelp: { enabled: true, url: '' },
+      google: { enabled: false, url: '' },
+    },
+    // Colors
+    accentColor: '#3b82f6',
   },
-  business: {
-    coverColor: '#0d3320',
-    coverGradient: 'linear-gradient(135deg, #22c55e 0%, #0d3320 100%)',
-    avatar: 'autorephero-logo.jpg',
-    avatarType: 'photo',
-    name: 'AutoRepHero',
-    title: 'Automated Reviews & Local SEO • Spokane, WA',
-    tagline: 'Get more reviews, rank higher, grow faster. The RAPID Hero Business Building System™ for small businesses.',
-    themeColor: '#22c55e',
-    actions: [
-      { icon: '📞', label: 'Call', href: 'tel:+15098180787' },
-      { icon: '💬', label: 'Text', href: 'sms:+15098180787' },
-      { icon: '📧', label: 'Email', href: 'mailto:chuck@autorephero.com' },
-      { icon: '🌐', label: 'Website', href: 'https://autorephero.com' },
-    ],
-    links: [
-      { icon: '🌐', bg: '#166534', label: 'Website', sub: 'autorephero.com', href: 'https://autorephero.com' },
-      { icon: '▶️', bg: '#7c2d12', label: 'YouTube', sub: 'Demos & tutorials', href: 'https://youtube.com/@autorephero' },
-      { icon: '💼', bg: '#1e3a5f', label: 'LinkedIn', sub: 'Chuck Zaagsma', href: 'https://www.linkedin.com/in/chuck-zaagsma/' },
-      { icon: '📋', bg: '#4c1d95', label: 'Schedule a Demo', sub: 'Book a time on my calendar', href: 'https://calendar.app.google/5F5ukx7i52L4YZqu6' },
-    ],
-    details: [
-      { icon: '📍', text: 'Spokane, WA' },
-      { icon: '📞', text: '(509) 818-0787' },
-      { icon: '📧', text: 'chuck@autorephero.com' },
-      { icon: '🌐', text: 'autorephero.com' },
-    ],
-    url: 'https://rbc.autorephero.com/autorephero',
-    vcard: { fn: 'AutoRepHero', org: 'AutoRepHero', tel: '+15098180787', email: 'chuck@autorephero.com', adr: 'Spokane, WA', url: 'https://autorephero.com' }
-  },
-  personal: {
-    coverColor: '#2d1b69',
-    coverGradient: 'linear-gradient(135deg, #2d1b69 0%, #1a0a3e 100%)',
-    avatar: 'chuck.jpg',
-    avatarType: 'photo',
-    name: 'Chuck Zaagsma',
-    title: 'Founder, AutoRepHero',
-    tagline: 'Helping small businesses get more reviews, rank higher, and grow faster.',
-    themeColor: '#8b5cf6',
-    actions: [
-      { icon: '📞', label: 'Call', href: 'tel:+15098180787' },
-      { icon: '💬', label: 'Text', href: 'sms:+15098180787' },
-      { icon: '📧', label: 'Email', href: 'mailto:chuck@autorephero.com' },
-      { icon: '🌐', label: 'Website', href: 'https://autorephero.com' },
-    ],
-    links: [
-      { icon: '🚀', bg: '#4c1d95', label: 'AutoRepHero', sub: 'Automated review solutions', href: 'https://autorephero.com' },
-      { icon: '📘', bg: '#1e40af', label: 'Facebook', sub: '@chuckzonline', href: 'https://www.facebook.com/chuckzonline' },
-      { icon: '📸', bg: '#86198f', label: 'Instagram', sub: '@chuckzaagsma', href: 'https://www.instagram.com/chuckzaagsma/' },
-      { icon: '🎵', bg: '#111', label: 'TikTok', sub: '@chuckzonline', href: 'https://www.tiktok.com/@chuckzonline' },
-      { icon: '💼', bg: '#1e3a5f', label: 'LinkedIn', sub: 'Chuck Zaagsma', href: 'https://www.linkedin.com/in/chuck-zaagsma/' },
-      { icon: '📋', bg: '#4c1d95', label: 'Schedule a Call', sub: 'Book a time', href: 'https://calendar.app.google/5F5ukx7i52L4YZqu6' },
-    ],
-    details: [
-      { icon: '📍', text: 'Spokane, WA' },
-      { icon: '📞', text: '(509) 818-0787' },
-      { icon: '📧', text: 'chuck@autorephero.com' },
-      { icon: '🌐', text: 'autorephero.com' },
-    ],
-    url: 'https://rbc.autorephero.com/chuck',
-    vcard: { fn: 'Chuck Zaagsma', org: 'AutoRepHero', tel: '+15098180787', email: 'chuck@autorephero.com', adr: 'Spokane, WA', url: 'https://autorephero.com' }
-  },
-
-  landscape: {
-    coverColor: '#14532d',
-    coverGradient: 'linear-gradient(135deg, #16a34a 0%, #14532d 100%)',
-    avatar: '🌿',
-    avatarType: 'icon',
-    name: 'Green Edge Landscaping',
-    title: 'Spokane, WA',
-    tagline: 'Professional lawn care, landscaping & yard maintenance. Your yard, our passion.',
-    themeColor: '#22c55e',
-    actions: [
-      { icon: '📞', label: 'Call', href: 'tel:+15095550123' },
-      { icon: '💬', label: 'Text', href: 'sms:+15095550123' },
-      { icon: '📍', label: 'Map', href: 'https://maps.google.com/?q=Spokane+WA' },
-      { icon: '🌐', label: 'Website', href: '#' },
-    ],
-    links: [
-      { icon: '📸', bg: '#86198f', label: 'Instagram', sub: '@greenedgelandscaping', href: '#' },
-      { icon: '📘', bg: '#1e40af', label: 'Facebook', sub: 'Green Edge Landscaping', href: '#' },
-      { icon: '⭐', bg: '#854d0e', label: 'Leave a Google Review', sub: 'We appreciate your feedback!', href: '#' },
-      { icon: '📋', bg: '#166534', label: 'Request a Free Quote', sub: 'Book your estimate today', href: '#' },
-    ],
-    details: [
-      { icon: '📍', text: 'Spokane, WA' },
-      { icon: '📞', text: '(509) 555-0123' },
-      { icon: '🕐', text: 'Mon–Sat 7am–6pm' },
-    ],
-    shopItems: [
-      { name: 'Lawn Mowing', price: '$45–$85', img: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=200&h=150&fit=crop', desc: 'Weekly or bi-weekly cuts' },
-      { name: 'Spring Cleanup', price: '$150–$350', img: 'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=200&h=150&fit=crop', desc: 'Debris removal, edging & mulch' },
-      { name: 'Sprinkler Startup', price: '$89', img: 'https://images.unsplash.com/photo-1563089145-599997674d42?w=200&h=150&fit=crop', desc: 'Turn on & inspect your system' },
-      { name: 'Hedge Trimming', price: '$75–$200', img: 'https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?w=200&h=150&fit=crop', desc: 'Shrubs, hedges & shaping' },
-      { name: 'Fertilization', price: '$65', img: 'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=200&h=150&fit=crop', desc: 'Seasonal lawn treatment' },
-      { name: 'Aeration', price: '$95–$175', img: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=200&h=150&fit=crop', desc: 'Core aeration for healthier roots' },
-    ],
-    url: 'https://rbc.autorephero.com/green-edge-landscaping',
-    vcard: { fn: 'Green Edge Landscaping', org: 'Green Edge Landscaping', tel: '+15095550123', email: '', adr: 'Spokane, WA', url: '' }
-  },
-
-  housekeeper: {
-    coverColor: '#1e3a5f',
-    coverGradient: 'linear-gradient(135deg, #3b82f6 0%, #1e3a5f 100%)',
-    avatar: '🏠',
-    avatarType: 'icon',
-    name: 'Spotless Home Cleaning',
-    title: 'Spokane, WA',
-    tagline: 'Professional house cleaning & maid services. Reliable, trusted, and detail-oriented.',
-    themeColor: '#3b82f6',
-    actions: [
-      { icon: '📞', label: 'Call', href: 'tel:+15095550456' },
-      { icon: '💬', label: 'Text', href: 'sms:+15095550456' },
-      { icon: '📍', label: 'Map', href: 'https://maps.google.com/?q=Spokane+WA' },
-      { icon: '🌐', label: 'Website', href: '#' },
-    ],
-    links: [
-      { icon: '📸', bg: '#86198f', label: 'Instagram', sub: '@spotlesshomecleaning', href: '#' },
-      { icon: '📘', bg: '#1e40af', label: 'Facebook', sub: 'Spotless Home Cleaning', href: '#' },
-      { icon: '⭐', bg: '#854d0e', label: 'Leave a Google Review', sub: 'We appreciate your feedback!', href: '#' },
-      { icon: '📋', bg: '#1e3a5f', label: 'Book a Cleaning', sub: 'Schedule online in 60 seconds', href: '#' },
-    ],
-    details: [
-      { icon: '📍', text: 'Spokane, WA' },
-      { icon: '📞', text: '(509) 555-0456' },
-      { icon: '🕐', text: 'Mon–Sat 8am–5pm' },
-      { icon: '✅', text: 'Insured & Background Checked' },
-    ],
-    shopItems: [
-      { name: 'Standard Cleaning', price: '$120–$180', img: 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=200&h=150&fit=crop', desc: 'Vacuum, mop, bathrooms & kitchen' },
-      { name: 'Deep Clean', price: '$200–$350', img: 'https://images.unsplash.com/photo-1563453392212-326f5e854473?w=200&h=150&fit=crop', desc: 'Top-to-bottom thorough clean' },
-      { name: 'Move In/Out Clean', price: '$250–$400', img: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=200&h=150&fit=crop', desc: 'Full clean for empty homes' },
-      { name: 'Weekly Service', price: 'From $95/visit', img: 'https://images.unsplash.com/photo-1584820927498-cfe5211fd8bf?w=200&h=150&fit=crop', desc: 'Recurring weekly maintenance clean' },
-      { name: 'Window Cleaning', price: '$75–$150', img: 'https://images.unsplash.com/photo-1527515637462-cff94eecc1ac?w=200&h=150&fit=crop', desc: 'Interior windows, streak-free shine' },
-      { name: 'Fridge & Oven', price: '$45 each', img: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=200&h=150&fit=crop', desc: 'Deep clean appliance add-on' },
-    ],
-    url: 'https://rbc.autorephero.com/spotless-home-cleaning',
-    vcard: { fn: 'Spotless Home Cleaning', org: 'Spotless Home Cleaning', tel: '+15095550456', email: '', adr: 'Spokane, WA', url: '' }
-  }
+  slug: generateSlug(),
 };
 
-function showDemo(type) {
-  document.querySelectorAll('.demo-switch').forEach(b => b.classList.remove('active'));
-  event.target.classList.add('active');
-  renderCard(DEMOS[type]);
+function generateSlug() {
+  return Math.random().toString(36).slice(2,8);
 }
 
-function renderCard(d) {
-  const c = document.getElementById('cardContainer');
-  c.innerHTML = `
-    <div class="card-cover" style="background:${d.coverGradient}">
-      <div class="card-cover-overlay"></div>
+// ===== RENDER =====
+function render() {
+  const app = document.getElementById('app');
+  if (S.mode === 'builder') {
+    app.innerHTML = renderBuilder();
+  } else {
+    app.innerHTML = renderCustomer();
+  }
+}
+
+function renderBuilder() {
+  const sections = [
+    { key: 'card', icon: '📇', title: 'Business Card', sub: 'Your info, logo & contact details', cls: 's-card' },
+    { key: 'offer', icon: '🎁', title: 'Special Offer', sub: 'Create a deal to attract customers', cls: 's-offer' },
+    { key: 'follow', icon: '📱', title: 'Follow Us', sub: 'Social media links', cls: 's-follow' },
+    { key: 'reviews', icon: '⭐', title: 'Leave a Review', sub: 'Review platform setup', cls: 's-reviews' },
+    { key: 'textclub', icon: '📲', title: 'Text Club', sub: 'VIP customer list (upgrade)', cls: 's-textclub' },
+  ];
+
+  let html = `
+    <div style="text-align:center;margin-bottom:20px">
+      <div style="font-size:24px;font-weight:900;letter-spacing:-0.5px">⚡ Rapid Business Contact ⚡</div>
+      <div style="font-size:12px;color:var(--text3);margin-top:4px">One link. One tap. Your entire business.</div>
+      <button onclick="showExamples()" style="margin-top:8px;background:transparent;border:1px solid #333;color:var(--text2);padding:8px 16px;border-radius:10px;font-family:inherit;font-size:12px;font-weight:600;cursor:pointer">👁 See Examples</button>
     </div>
-    <div class="card-avatar-wrap">
-      ${d.avatarType==='photo'
-        ? `<div class="card-avatar" style="background:${d.coverColor}"><img src="${d.avatar}" alt="${d.name}"></div>`
-        : `<div class="card-avatar icon" style="background:${d.coverColor}">${d.avatar}</div>`
-      }
+    <div class="mode-toggle">
+      <button class="mode-btn active" onclick="setMode('builder')">⚡ Builder</button>
+      <button class="mode-btn" onclick="setMode('customer')">👁 Preview</button>
     </div>
-    <div class="card-info">
-      <div class="card-name">${d.name}</div>
-      <div class="card-title">${d.title}</div>
-      <div class="card-tagline">${d.tagline}</div>
-    </div>
-    <div class="card-actions">
-      ${d.actions.map(a => `<a class="action-btn" href="${a.href}"><div class="icon-circle" style="background:${d.themeColor}">${a.icon}</div><span>${a.label}</span></a>`).join('')}
-    </div>
-    <div class="card-links">
-      ${d.links.map(l => `<a class="link-item" href="${l.href}"><div class="link-icon" style="background:${l.bg}">${l.icon}</div><div class="link-text"><div class="label">${l.label}</div><div class="sub">${l.sub}</div></div><div class="link-arrow">›</div></a>`).join('')}
-    </div>
-    <div class="card-details">
-      ${d.details.map(dt => `<div class="detail-row"><span class="di">${dt.icon}</span>${linkifyDetail(dt)}</div>`).join('')}
-    </div>
-    ${d.shopItems && d.shopItems.length ? `
-    <div class="shop-section">
-      <div class="shop-section-title">🛒 Services & Pricing</div>
-      <div class="shop-grid">
-        ${d.shopItems.map(item => `
-          <div class="shop-item">
-            <img src="${item.img}" alt="${item.name}" loading="lazy" onerror="this.style.display='none'">
-            <div class="shop-item-info">
-              <div class="shop-item-name">${item.name}</div>
-              <div class="shop-item-desc">${item.desc}</div>
-              <div class="shop-item-price" style="color:${d.themeColor}">${item.price}</div>
-            </div>
-          </div>
-        `).join('')}
-      </div>
-    </div>` : ''}
-    <!-- Locked Contact Collection Teaser -->
-    <div style="margin:12px 20px;padding:16px;background:rgba(255,255,255,0.03);border:1px solid #222;border-radius:14px;text-align:center;position:relative;overflow:hidden">
-      <div style="opacity:0.35;pointer-events:none">
-        <div style="font-size:13px;font-weight:700;color:#fff;margin-bottom:8px">📧 Want updates from this business?</div>
-        <div style="display:flex;gap:6px;max-width:300px;margin:0 auto">
-          <input type="email" placeholder="Enter your email" disabled style="flex:1;padding:10px 12px;background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#666;font-size:12px">
-          <button disabled style="padding:10px 16px;background:#22c55e;border:none;border-radius:8px;color:#fff;font-size:12px;font-weight:700">Subscribe</button>
+  `;
+
+  sections.forEach((sec, i) => {
+    const isLocked = i > 0 && !S.completed.has(sections[i-1].key);
+    const isCompleted = S.completed.has(sec.key);
+    const isOpen = S.step === i && !isLocked;
+    const cls = [
+      'section', sec.cls,
+      isLocked ? 'locked' : '',
+      isCompleted ? 'completed' : '',
+      isOpen ? 'open' : '',
+    ].filter(Boolean).join(' ');
+
+    html += `<div class="${cls}">
+      <div class="section-header" onclick="${isLocked ? '' : `toggleSection(${i})`}">
+        <div class="section-icon">${sec.icon}</div>
+        <div>
+          <div class="section-title">${sec.title}</div>
+          <div class="section-subtitle">${sec.sub}</div>
         </div>
       </div>
-      <div style="margin-top:10px">
-        <span style="font-size:11px;color:#555">🔒 Coming Soon — Collect customer contacts & send deals</span>
-        <a href="https://autorephero.com" target="_blank" style="display:block;margin-top:6px;font-size:11px;color:#3b82f6;text-decoration:none;font-weight:600">Learn more about AutoRepHero →</a>
+      <div class="section-body" onclick="event.stopPropagation()">${renderSectionBody(sec.key)}</div>
+    </div>`;
+  });
+
+  // Share bar
+  if (S.completed.size > 0) {
+    html += `
+      <div style="margin-top:20px;padding:20px;background:var(--card);border-radius:var(--radius);text-align:center">
+        <div style="font-size:13px;color:var(--text2);margin-bottom:8px">Your link:</div>
+        <div style="font-size:16px;font-weight:700;color:var(--accent);margin-bottom:16px">rbc.autorephero.com/${S.slug}</div>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-primary" onclick="showQR('https://rbc.autorephero.com/${S.slug}','${S.data.name||"My Business"}')">📱 QR Code</button>
+          <button class="btn btn-outline" onclick="shareLink()">📤 Share</button>
+          <button class="btn btn-green" onclick="saveContact()">📇 Save Contact</button>
+        </div>
       </div>
-    </div>
+    `;
+  }
 
-    <!-- RRDS Upsell -->
-    <div style="margin:8px 20px;padding:16px;background:linear-gradient(135deg,rgba(59,130,246,0.08),rgba(139,92,246,0.08));border:1px solid rgba(59,130,246,0.2);border-radius:14px;text-align:center">
-      <div style="font-size:15px;font-weight:800;color:#fff;margin-bottom:4px">Want more reviews? ⭐</div>
-      <div style="font-size:12px;color:#888;margin-bottom:10px">Get the ⚡ Rapid Review Deployment System ⚡ — NFC cards, smart routing, AI review prompts</div>
-      <a href="https://autorephero.com#pricing" target="_blank" style="display:inline-block;padding:10px 24px;background:#3b82f6;color:#fff;border-radius:10px;font-size:13px;font-weight:700;text-decoration:none">Learn More →</a>
-    </div>
-    <div class="share-bar">
-      <button class="share-btn secondary" onclick='addToHomeScreen("${d.name}")'>📲 Add Shortcut to My Phone</button>
-      <button class="share-btn primary" onclick='shareCard("${d.url}","${d.name}")'>📤 Share This Card</button>
-      <button class="share-btn secondary" onclick='showQR("${d.url}","${d.name}")'>📱 Show QR Code</button>
-      <button class="share-btn save" onclick='saveContact(${JSON.stringify(d.vcard).replace(/'/g,"&#39;")})'>📇 Save to My Contacts</button>
-    </div>
-    <div style="position:fixed;bottom:0;left:0;right:0;z-index:60;padding:8px 16px;background:rgba(10,10,10,0.95);border-top:1px solid #222;text-align:center;backdrop-filter:blur(10px)">
-      <a href="https://rbo.autorephero.com" target="_blank" style="display:block;max-width:480px;margin:0 auto;padding:10px;background:linear-gradient(135deg,#22c55e,#15803d);color:#fff;text-decoration:none;text-align:center;font-weight:700;font-size:13px;border-radius:10px;font-family:Inter,sans-serif">🎁 Create a ⚡ Rapid Business Offer ⚡</a>
-    </div>
-    <div style="height:50px"></div>
-    <div style="text-align:center;padding:4px 8px;margin-bottom:2px">
-      <span style="font-size:11px;color:#666">Your card link: </span>
-      <span style="font-size:12px;color:#3b82f6;word-break:break-all">${d.url}</span>
-    </div>
-    <div class="powered-by">Powered by <a href="https://autorephero.com">AutoRepHero</a></div>
-  `;
+  html += `<div class="powered-by">Powered by <a href="https://autorephero.com">AutoRepHero</a> ⚡</div>`;
+  return html;
 }
 
-function linkifyDetail(dt) {
-  const t = dt.text;
-  // Phone number
-  if (dt.icon === '📞') {
-    const digits = t.replace(/\D/g,'');
-    return `<a href="tel:+1${digits}" style="color:#aaa;text-decoration:none">${t}</a>`;
+function renderSectionBody(key) {
+  switch(key) {
+    case 'card': return `
+      <div style="position:relative;margin-bottom:14px">
+        <input class="form-input" placeholder="🔍 Search your business name..." oninput="searchBiz(this.value)" autocomplete="off" style="padding-left:14px">
+        <div id="searchResults" style="display:none;background:var(--card);border:1px solid #333;border-radius:12px;max-height:200px;overflow-y:auto;margin-top:4px"></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;color:var(--text3);font-size:11px;text-transform:uppercase;letter-spacing:1px;margin-bottom:14px"><div style="flex:1;height:1px;background:#333"></div>or enter manually<div style="flex:1;height:1px;background:#333"></div></div>
+      <div class="form-group">
+        <label>Card Type</label>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          ${['🔧 Business','👤 Personal','⛪ Church','🏢 Organization','🏠 Realtor'].map(t => {
+            const val = t.split(' ').pop().toLowerCase();
+            return `<button class="social-chip ${S.data.cardType===val?'active':''}" onclick="S.data.cardType='${val}';render();S.step=0;render()" style="font-size:13px;padding:10px 14px">${t}</button>`;
+          }).join('')}
+        </div>
+      </div>
+      <div class="upload-zone" onclick="document.getElementById('logoInput').click()" id="uploadZone">
+        ${S.data.logoUrl ? `<img src="${S.data.logoUrl}" alt="Logo">` : ''}
+        <div class="upload-text">${S.data.logoUrl ? 'Tap to change' : '📸 <span>Add your logo or photo</span><br>Shows up when customers save your contact'}</div>
+        <input type="file" id="logoInput" accept="image/*" style="display:none" onchange="handleLogo(this)">
+      </div>
+      <div class="form-group" style="margin-top:14px"><label>${{'personal':'Your Name','church':'Church / Organization Name','organization':'Organization Name','realtor':'Your Name'}[S.data.cardType] || 'Business Name'}</label><input class="form-input" placeholder="${{'personal':'John Smith','church':'Grace Community Church','organization':'Spokane Rotary Club','realtor':'Jane Smith, Realtor'}[S.data.cardType] || "Joe's Plumbing"}" value="${S.data.name}" oninput="S.data.name=this.value"></div>
+      <div class="form-row">
+        <div class="form-group"><label>Phone</label><input class="form-input" placeholder="(509) 555-1234" value="${S.data.phone}" oninput="S.data.phone=this.value"></div>
+        <div class="form-group"><label>Email</label><input class="form-input" placeholder="you@email.com" value="${S.data.email}" oninput="S.data.email=this.value"></div>
+      </div>
+      <div class="form-group"><label>Address</label><input class="form-input" placeholder="123 Main St, Spokane, WA" value="${S.data.address}" oninput="S.data.address=this.value"></div>
+      <div class="form-group"><label>Website</label><input class="form-input" placeholder="https://yourbusiness.com" value="${S.data.website}" oninput="S.data.website=this.value"></div>
+      <div class="form-group"><label>Tagline</label><input class="form-input" placeholder="Fast, honest service you can trust" value="${S.data.tagline}" oninput="S.data.tagline=this.value"></div>
+      <button class="btn btn-primary" onclick="saveFormValues();if(!S.data.name){alert('Please enter a business name');return;}completeSection('card')">✅ Save Card & Continue</button>
+    `;
+    case 'offer': return `
+      <p style="font-size:12px;color:var(--text2);margin-bottom:12px">✨ Select a suggestion or create your own:</p>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px">
+        ${[
+          {type:'plumber',label:'🔧 Plumber',h:'$50 Off Any Plumbing Repair',d:'Leaks, clogs, water heaters. Licensed & insured. Same-day service.'},
+          {type:'roofer',label:'🏠 Roofer',h:'Free Roof Inspection + 10% Off',d:'We inspect at no charge. If repairs needed, save 10%.'},
+          {type:'auto',label:'🚗 Auto',h:'$25 Off Your Next Oil Change',d:'Full synthetic included. Free multi-point inspection with every service.'},
+          {type:'restaurant',label:'🍕 Restaurant',h:'Buy One Entree, Get One Free!',d:'Dine in only. Second entree of equal or lesser value.'},
+          {type:'salon',label:'✂️ Salon',h:'20% Off Your First Visit',d:'Haircuts, color, styling. New clients only.'},
+          {type:'realtor',label:'🏡 Realtor',h:'Free Home Value Report',d:'Find out what your home is worth. No obligation.'},
+          {type:'carlot',label:'🚙 Car Lot',h:'Free Vehicle History Report',d:'No commitment. Know exactly what you are buying.'},
+          {type:'retail',label:'🛍️ Retail',h:'Buy 2, Get 1 Free!',d:'Mix and match. Free item equal or lesser value.'},
+          {type:'church',label:'⛪ Church',h:'Free Welcome Gift',d:'Join us this Sunday and receive a special welcome gift.'},
+          {type:'other',label:'💼 Other',h:'15% Off Your First Service',d:'We want to earn your business. Book today and save!'},
+        ].map(o => `<button class="social-chip" onclick="S.data.offerTitle='${o.h.replace(/'/g,"\\'")}';S.data.offerDesc='${o.d.replace(/'/g,"\\'")}';render();S.step=1;render()" style="font-size:11px;padding:8px 12px">${o.label}</button>`).join('')}
+      </div>
+      <div class="form-group"><label>Offer Headline</label><input class="form-input" placeholder="$50 Off First Service" value="${S.data.offerTitle}" oninput="S.data.offerTitle=this.value"></div>
+      <div class="form-group"><label>Details</label><textarea class="form-input" placeholder="Describe your offer..." oninput="S.data.offerDesc=this.value">${S.data.offerDesc}</textarea></div>
+      <div class="form-group"><label>Expires (optional)</label><input class="form-input" placeholder="e.g. April 30, 2026 or While supplies last" value="${S.data.offerExpiry}" oninput="S.data.offerExpiry=this.value"></div>
+      <div class="form-group"><label>Exemptions (optional)</label><textarea class="form-input" placeholder="e.g. Cannot combine with other offers. New customers only. One per household." oninput="S.data.offerExemptions=this.value">${S.data.offerExemptions||''}</textarea></div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-gold" onclick="saveFormValues();completeSection('offer')">🎁 Save Offer & Continue</button>
+        <button class="btn btn-outline" onclick="skipSection('offer')" style="flex:0.4">Skip</button>
+      </div>
+    `;
+    case 'follow': return `
+      <p style="font-size:12px;color:var(--text2);margin-bottom:12px">Select your platforms and add your links:</p>
+      ${['Facebook','Instagram','YouTube','TikTok','LinkedIn','Twitter/X'].map(p => {
+        const key = p.toLowerCase().replace('/','');
+        const active = S.data.socials[key];
+        return `<div style="margin-bottom:10px">
+          <div class="social-chip ${active !== undefined ? 'active' : ''}" onclick="toggleSocial('${key}')" style="display:inline-block;margin-bottom:6px">${p}</div>
+          ${active !== undefined ? `<input class="form-input" placeholder="Your ${p} URL" value="${active||''}" oninput="S.data.socials['${key}']=this.value" style="margin-top:4px">` : ''}
+        </div>`;
+      }).join('')}
+      <div style="display:flex;gap:8px;margin-top:14px">
+        <button class="btn btn-primary" onclick="completeSection('follow')" style="background:#8b5cf6">📱 Save Socials & Continue</button>
+        <button class="btn btn-outline" onclick="skipSection('follow')" style="flex:0.4">Skip</button>
+      </div>
+    `;
+    case 'reviews': return `
+      <p style="font-size:12px;color:var(--text2);margin-bottom:12px">Add your review page URLs:</p>
+      ${Object.entries(S.data.reviewPlatforms).map(([k,v]) => `
+        <div style="margin-bottom:10px;display:flex;align-items:center;gap:10px">
+          <label style="display:flex;align-items:center;gap:6px;cursor:pointer;min-width:90px">
+            <input type="checkbox" ${v.enabled?'checked':''} onchange="S.data.reviewPlatforms['${k}'].enabled=this.checked;render()">
+            <span style="font-size:13px;font-weight:600;text-transform:capitalize">${k}</span>
+          </label>
+          ${v.enabled ? `<input class="form-input" placeholder="${k} review URL" value="${v.url}" oninput="S.data.reviewPlatforms['${k}'].url=this.value" style="flex:1">` : ''}
+        </div>
+      `).join('')}
+      <button class="btn btn-green" onclick="completeSection('reviews')">⭐ Save Reviews & Finish</button>
+    `;
+    case 'textclub': return `
+      <div style="text-align:center;padding:20px 0">
+        <div style="font-size:40px;margin-bottom:8px">📲</div>
+        <div style="font-size:16px;font-weight:700;margin-bottom:4px">Text Club — Coming Soon</div>
+        <div style="font-size:13px;color:var(--text2);margin-bottom:16px">Build a VIP customer list. Send exclusive deals directly to their phone.</div>
+        <button class="btn btn-outline" disabled>🔒 Upgrade to Unlock</button>
+      </div>
+    `;
   }
-  // Email
-  if (dt.icon === '📧') {
-    return `<a href="mailto:${t}" style="color:#aaa;text-decoration:none">${t}</a>`;
-  }
-  // Website
-  if (dt.icon === '🌐') {
-    const url = t.startsWith('http') ? t : 'https://' + t;
-    return `<a href="${url}" style="color:#aaa;text-decoration:none" target="_blank">${t}</a>`;
-  }
-  // Address
-  if (dt.icon === '📍') {
-    return `<a href="https://maps.google.com/?q=${encodeURIComponent(t)}" style="color:#aaa;text-decoration:none" target="_blank">${t}</a>`;
-  }
-  return t;
 }
 
-function shareCard(url, name) {
-  if (navigator.share) {
-    navigator.share({ title: name + ' — Rapid Business Card', url: url }).catch(() => {});
+function renderCustomer() {
+  const d = S.data;
+  let html = '';
+
+  // Header
+  html += `<div style="text-align:center;padding:20px 0 10px">
+    ${d.logoUrl ? `<div style="position:relative;width:80px;height:80px;margin:0 auto 10px">
+      <img src="${d.logoUrl}" style="width:80px;height:80px;border-radius:50%;object-fit:cover;border:3px solid var(--card2)">
+      <div style="position:absolute;bottom:-2px;right:-2px;width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#3b82f6,#1d4ed8);display:flex;align-items:center;justify-content:center;font-size:14px;border:2px solid var(--bg);box-shadow:0 2px 8px rgba(59,130,246,0.4)">⚡</div>
+    </div>` : `<div style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,#3b82f6,#1d4ed8);display:flex;align-items:center;justify-content:center;margin:0 auto 10px;font-size:36px;box-shadow:0 4px 20px rgba(59,130,246,0.4)">⚡</div>`}
+    <div style="font-size:22px;font-weight:900;letter-spacing:-0.5px">${d.name || 'Your Business'}</div>
+    ${d.tagline ? `<div style="font-size:13px;color:var(--text2);margin-top:4px">${d.tagline}</div>` : ''}
+  </div>`;
+
+  // Quick Actions
+  if (d.phone || d.email || d.address) {
+    html += `<div class="quick-actions">
+      ${d.phone ? `<a class="quick-action" href="tel:${d.phone}"><div class="qa-icon" style="background:#2563eb">📞</div><span>Call</span></a>` : ''}
+      ${d.phone ? `<a class="quick-action" href="sms:${d.phone}"><div class="qa-icon" style="background:#7c3aed">💬</div><span>Text</span></a>` : ''}
+      ${d.address ? `<a class="quick-action" href="https://maps.google.com/?q=${encodeURIComponent(d.address)}"><div class="qa-icon" style="background:#16a34a">📍</div><span>Map</span></a>` : ''}
+      ${d.email ? `<a class="quick-action" href="mailto:${d.email}"><div class="qa-icon" style="background:#ea580c">📧</div><span>Email</span></a>` : ''}
+    </div>`;
+  }
+
+  // Offer
+  if (d.offerTitle) {
+    html += `<div class="customer-section">
+      <h3>🎁 Special Offer</h3>
+      <div class="offer-display">
+        <div class="offer-title">${d.offerTitle}</div>
+        ${d.offerDesc ? `<div class="offer-sub">${d.offerDesc}</div>` : ''}
+        ${d.offerExpiry ? `<div style="font-size:11px;color:var(--text3);margin-top:6px">Expires: ${d.offerExpiry}</div>` : ''}
+        ${d.offerExemptions ? `<div style="font-size:10px;color:var(--text3);margin-top:4px;font-style:italic">* ${d.offerExemptions}</div>` : ''}
+        <button class="offer-btn" onclick="showClaimForm()">Claim This Deal</button>
+      </div>
+    </div>`;
+  }
+
+  // Follow
+  const activeSocials = Object.entries(d.socials).filter(([k,v]) => v);
+  if (activeSocials.length > 0) {
+    const socialIcons = {facebook:'📘',instagram:'📸',youtube:'▶️',tiktok:'🎵',linkedin:'💼','twitterx':'🐦'};
+    html += `<div class="customer-section">
+      <h3>📱 Follow Us</h3>
+      ${activeSocials.map(([k,v]) => `
+        <a href="${v}" target="_blank" class="platform-btn">
+          <div class="platform-icon" style="background:#1e3a5f">${socialIcons[k]||'🔗'}</div>
+          <div><div class="platform-name" style="text-transform:capitalize">${k}</div><div class="platform-sub">${v.replace(/https?:\/\/(www\.)?/,'').split('/')[0]}</div></div>
+        </a>
+      `).join('')}
+    </div>`;
+  }
+
+  // Reviews
+  const enabledReviews = Object.entries(d.reviewPlatforms).filter(([k,v]) => v.enabled && v.url);
+  if (enabledReviews.length > 0) {
+    const colors = {facebook:'#1877F2',yelp:'#FF1A1A',google:'#4285F4',bbb:'#003087'};
+    html += `<div class="customer-section">
+      <h3>⭐ Leave a Review</h3>
+      <p style="font-size:12px;color:var(--text2);margin-bottom:12px">Your feedback means the world to us!</p>
+      ${enabledReviews.map(([k,v]) => `
+        <a href="${v.url}" target="_blank" class="platform-btn">
+          <div class="platform-icon" style="background:${colors[k]||'#333'}">${k[0].toUpperCase()}</div>
+          <div><div class="platform-name" style="text-transform:capitalize">${k}</div><div class="platform-sub">Leave a review</div></div>
+        </a>
+      `).join('')}
+    </div>`;
+  }
+
+  // Save Contact + Share + Install
+  html += `<div style="display:flex;gap:8px;margin-top:16px">
+    <button class="btn btn-green" onclick="saveContact()">📇 Save</button>
+    <button class="btn btn-primary" onclick="showQR('https://rbc.autorephero.com/${S.slug}','${d.name||"Business"}')">📱 QR</button>
+    <button class="btn btn-outline" onclick="shareLink()">📤 Share</button>
+  </div>
+  <button class="btn btn-outline" onclick="promptInstall()" style="margin-top:8px" id="installBtn">📲 Add to Home Screen</button>`;
+
+  // Back to builder
+  html += `<div style="text-align:center;margin-top:16px">
+    <button class="mode-btn" onclick="setMode('builder')" style="background:var(--card);color:var(--text2);padding:10px 20px;border-radius:10px;border:1px solid #333;cursor:pointer;font-family:inherit;font-size:12px">⚡ Back to Builder</button>
+  </div>`;
+
+  html += `<div class="powered-by">Powered by <a href="https://autorephero.com">AutoRepHero</a> ⚡</div>`;
+  return html;
+}
+
+// ===== ACTIONS =====
+function setMode(m) {
+  S.mode = m;
+  render();
+}
+
+function toggleSection(i) {
+  S.step = S.step === i ? -1 : i;
+  render();
+}
+
+function saveFormValues() {
+  // Grab current input values from DOM before re-render
+  const fields = {name:'b_name',phone:'b_phone',email:'b_email',address:'b_address',website:'b_website',tagline:'b_tagline',offerTitle:'b_offerTitle',offerDesc:'b_offerDesc',offerExpiry:'b_offerExpiry'};
+  Object.entries(fields).forEach(([key, id]) => {
+    const el = document.querySelector(`[oninput*="S.data.${key}"]`);
+    if (el) S.data[key] = el.value;
+  });
+}
+
+function completeSection(key) {
+  saveFormValues();
+  S.completed.add(key);
+  const order = ['card','offer','follow','reviews','textclub'];
+  const idx = order.indexOf(key);
+  if (idx < order.length - 1) S.step = idx + 1;
+  render();
+}
+
+function skipSection(key) {
+  completeSection(key);
+}
+
+function toggleSocial(key) {
+  if (S.data.socials[key] !== undefined) {
+    delete S.data.socials[key];
   } else {
-    navigator.clipboard.writeText(url).then(() => {
-      alert('Link copied!\n\n' + url);
-    });
+    S.data.socials[key] = '';
   }
+  render();
+}
+
+function handleLogo(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    S.data.logoUrl = e.target.result;
+    render();
+  };
+  reader.readAsDataURL(file);
 }
 
 function showQR(url, name) {
   document.getElementById('qrTitle').textContent = name;
   document.getElementById('qrOverlay').classList.add('active');
-  const canvas = document.getElementById('qrCanvas');
-  // Use API-generated QR image instead of JS library (works offline/local files)
-  const img = new Image();
-  img.crossOrigin = 'anonymous';
-  img.onload = function() {
-    canvas.width = 220; canvas.height = 220;
-    canvas.getContext('2d').drawImage(img, 0, 0, 220, 220);
-  };
-  img.src = 'https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=' + encodeURIComponent(url);
+  QRCode.toCanvas(document.getElementById('qrCanvas'), url, { width: 220, margin: 2, color: { dark: '#000', light: '#fff' } });
 }
-
 function closeQR() { document.getElementById('qrOverlay').classList.remove('active'); }
 
-let deferredInstallPrompt = null;
-window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); deferredInstallPrompt = e; });
-
-function addToHomeScreen(name) {
-  // Android: use native install prompt if available
-  if (deferredInstallPrompt) {
-    deferredInstallPrompt.prompt();
-    deferredInstallPrompt.userChoice.then(r => { deferredInstallPrompt = null; });
-    return;
-  }
-  // iOS / fallback: show instructions
-  const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent);
-  const modal = document.getElementById('qrOverlay');
-  const title = document.getElementById('qrTitle');
-  const sub = document.getElementById('qrSub');
-  const canvas = document.getElementById('qrCanvas');
-  canvas.width = 0; canvas.height = 0;
-  title.textContent = '📲 Add to Home Screen';
-  if (isIOS) {
-    sub.innerHTML = '<div style="text-align:left;font-size:14px;line-height:2;color:#333">' +
-      '1. Tap the <b>Share</b> button <span style="font-size:18px">⬆️</span> at the bottom<br>' +
-      '2. Scroll down and tap <b>"Add to Home Screen"</b><br>' +
-      '3. Tap <b>"Add"</b> in the top right<br><br>' +
-      '<span style="color:#888;font-size:12px">Your Rapid Business Card will appear as an app icon!</span></div>';
+function shareLink() {
+  const url = `https://rbc.autorephero.com/${S.slug}`;
+  if (navigator.share) {
+    navigator.share({ title: S.data.name || 'My Business', text: 'Check out ' + (S.data.name || 'my business'), url });
   } else {
-    sub.innerHTML = '<div style="text-align:left;font-size:14px;line-height:2;color:#333">' +
-      '1. Tap the <b>⋮ menu</b> (top right of browser)<br>' +
-      '2. Tap <b>"Add to Home Screen"</b> or <b>"Install App"</b><br>' +
-      '3. Tap <b>"Add"</b><br><br>' +
-      '<span style="color:#888;font-size:12px">Your Rapid Business Card will appear as an app icon!</span></div>';
+    navigator.clipboard.writeText(url).then(() => alert('Link copied!'));
   }
-  modal.classList.add('active');
 }
 
-function saveContact(vc) {
+function generateBoltIcon() {
+  const c = document.createElement('canvas');
+  c.width = 256; c.height = 256;
+  const ctx = c.getContext('2d');
+  const grad = ctx.createLinearGradient(0, 0, 256, 256);
+  grad.addColorStop(0, '#3b82f6');
+  grad.addColorStop(1, '#1d4ed8');
+  ctx.fillStyle = grad;
+  ctx.beginPath();
+  ctx.arc(128, 128, 128, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.font = '120px serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('⚡', 128, 138);
+  return c.toDataURL('image/png');
+}
+
+function addBoltWatermark(imgSrc) {
+  return new Promise((resolve) => {
+    const c = document.createElement('canvas');
+    c.width = 256; c.height = 256;
+    const ctx = c.getContext('2d');
+    const img = new Image();
+    img.onload = () => {
+      // Draw the uploaded image as circle
+      ctx.beginPath();
+      ctx.arc(128, 128, 128, 0, Math.PI * 2);
+      ctx.clip();
+      const size = Math.min(img.width, img.height);
+      const sx = (img.width - size) / 2;
+      const sy = (img.height - size) / 2;
+      ctx.drawImage(img, sx, sy, size, size, 0, 0, 256, 256);
+      // Bolt watermark — bottom right
+      ctx.restore();
+      ctx.beginPath();
+      ctx.arc(210, 210, 36, 0, Math.PI * 2);
+      const grad = ctx.createLinearGradient(174, 174, 246, 246);
+      grad.addColorStop(0, '#3b82f6');
+      grad.addColorStop(1, '#1d4ed8');
+      ctx.fillStyle = grad;
+      ctx.fill();
+      ctx.strokeStyle = '#0a0a0a';
+      ctx.lineWidth = 3;
+      ctx.stroke();
+      ctx.font = '32px serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('⚡', 210, 213);
+      resolve(c.toDataURL('image/png'));
+    };
+    img.onerror = () => resolve(generateBoltIcon());
+    img.src = imgSrc;
+  });
+}
+
+async function saveContact() {
+  const d = S.data;
+  let photoDataUrl;
+  if (d.logoUrl) {
+    photoDataUrl = await addBoltWatermark(d.logoUrl);
+  } else {
+    photoDataUrl = generateBoltIcon();
+  }
+  const photoData = photoDataUrl.split(',')[1];
+  const photoType = 'PNG';
   const vcard = [
-    'BEGIN:VCARD', 'VERSION:3.0',
-    'FN:' + vc.fn,
-    vc.org ? 'ORG:' + vc.org : '',
-    vc.tel ? 'TEL;TYPE=WORK:' + vc.tel : '',
-    vc.email ? 'EMAIL:' + vc.email : '',
-    vc.adr ? 'ADR;TYPE=WORK:;;' + vc.adr : '',
-    vc.url ? 'URL:' + vc.url : '',
+    'BEGIN:VCARD','VERSION:3.0',
+    'FN:' + (d.name || 'Business'),
+    'ORG:' + (d.name || ''),
+    d.phone ? 'TEL;TYPE=WORK:' + d.phone : '',
+    d.email ? 'EMAIL:' + d.email : '',
+    d.address ? 'ADR;TYPE=WORK:;;' + d.address : '',
+    d.website ? 'URL:' + d.website : '',
+    photoData ? `PHOTO;ENCODING=b;TYPE=${photoType}:${photoData}` : '',
     'END:VCARD'
   ].filter(Boolean).join('\n');
   const blob = new Blob([vcard], { type: 'text/vcard' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
-  a.download = vc.fn.replace(/\s+/g, '_') + '.vcf';
+  a.download = (d.name || 'contact').replace(/\s+/g, '_') + '.vcf';
   a.click();
 }
 
-// ===== BUILDER =====
-let builderColor = '#3b82f6';
+function showClaimForm() {
+  const d = S.data;
+  document.getElementById('claimSheet').innerHTML = `
+    <h3>🎁 Claim: ${d.offerTitle}</h3>
+    <p class="claim-sub">${d.offerDesc || 'Fill in your info to claim this deal'}</p>
+    <div class="form-group"><label>Your Name</label><input class="form-input" id="claimName" placeholder="Your name"></div>
+    <div class="form-group"><label>Email</label><input class="form-input" id="claimEmail" placeholder="you@email.com" type="email"></div>
+    <div class="form-group"><label>Phone</label><input class="form-input" id="claimPhone" placeholder="(509) 555-1234" type="tel"></div>
+    <label style="display:flex;align-items:center;gap:8px;margin:16px 0;font-size:12px;color:var(--text2);cursor:pointer">
+      <input type="checkbox" id="claimOptin">
+      Send me exclusive deals & updates from ${d.name || 'this business'}. Opt out anytime.
+    </label>
+    <button class="btn btn-gold" onclick="submitClaim()">🎁 Claim My Deal</button>
+  `;
+  document.getElementById('claimOverlay').classList.add('active');
+}
+function closeClaim() { document.getElementById('claimOverlay').classList.remove('active'); }
 
-function showBuilder() {
-  document.querySelectorAll('.demo-switch').forEach(b => b.classList.remove('active'));
-  if (event && event.target) event.target.classList.add('active');
-  document.getElementById('cardContainer').style.display = 'none';
-  document.getElementById('builder').classList.add('active');
-
+function submitClaim() {
+  const code = 'DEAL-' + Math.random().toString(36).slice(2,6).toUpperCase();
+  document.getElementById('claimSheet').innerHTML = `
+    <div style="text-align:center;padding:20px 0">
+      <div style="font-size:48px;margin-bottom:12px">🎉</div>
+      <h3 style="margin-bottom:4px">Deal Claimed!</h3>
+      <p style="color:var(--text2);font-size:13px;margin-bottom:16px">Show this code when you visit:</p>
+      <div style="font-size:28px;font-weight:900;color:var(--gold);letter-spacing:2px;margin-bottom:20px">${code}</div>
+      <button class="btn btn-outline" onclick="closeClaim()">Done</button>
+    </div>
+  `;
 }
 
-function showDemo(type) {
-  document.querySelectorAll('.demo-switch').forEach(b => b.classList.remove('active'));
-  event.target.classList.add('active');
-  document.getElementById('builder').classList.remove('active');
-  document.getElementById('cardContainer').style.display = 'flex';
-  renderCard(DEMOS[type]);
-}
+// ===== INSTALL PWA =====
+let deferredPrompt = null;
+window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt = e; });
 
-function pickColor(c, el) {
-  builderColor = c;
-  document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('active'));
-  el.classList.add('active');
-}
-
-const LINK_PREFIXES = {
-  facebook: 'facebook.com/', instagram: 'instagram.com/', youtube: 'youtube.com/',
-  linkedin: 'linkedin.com/in/', tiktok: 'tiktok.com/@', google: 'Full Google review URL',
-  yelp: 'yelp.com/biz/', website: 'https://', other: 'https://'
-};
-const LINK_PLACEHOLDERS = {
-  facebook: 'yourpage', instagram: 'yourhandle', youtube: 'yourchannel',
-  linkedin: 'yourprofile', tiktok: 'yourhandle', google: 'Paste full link',
-  yelp: 'your-business', website: 'yourbusiness.com', other: 'https://...'
-};
-
-function updateLinkPlaceholder(sel) {
-  const field = sel.closest('.link-field');
-  const prefix = field.querySelector('.link-prefix');
-  const input = field.querySelector('input');
-  const val = sel.value;
-  if (['google','website','other'].includes(val)) {
-    prefix.style.display = 'none';
-    input.placeholder = LINK_PLACEHOLDERS[val];
+function promptInstall() {
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then(() => { deferredPrompt = null; });
   } else {
-    prefix.style.display = '';
-    prefix.textContent = LINK_PREFIXES[val];
-    input.placeholder = LINK_PLACEHOLDERS[val];
+    // iOS / fallback instructions
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    if (isIOS) {
+      alert('Tap the Share button (📤) at the bottom of Safari, then tap "Add to Home Screen"');
+    } else {
+      alert('Tap the menu (⋮) in your browser, then tap "Add to Home Screen" or "Install App"');
+    }
   }
 }
 
-function addLinkField() {
-  const lf = document.getElementById('linkFields');
-  const div = document.createElement('div');
-  div.className = 'link-field';
-  div.innerHTML = `<select onchange="updateLinkPlaceholder(this)" style="font-size:15px;padding:12px 8px">
-    <option value="facebook">📘 Facebook</option><option value="instagram">📸 Instagram</option><option value="youtube">▶️ YouTube</option><option value="linkedin">💼 LinkedIn</option><option value="tiktok">🎵 TikTok</option><option value="google">⭐ Google Reviews</option><option value="yelp">⭐ Yelp</option><option value="website">🌐 Website</option><option value="other">🔗 Other</option>
-  </select>
-  <div style="display:flex;align-items:center;flex:1;background:#1a1a1a;border:1px solid #333;border-radius:10px;overflow:hidden">
-    <span class="link-prefix" style="padding:0 2px 0 10px;font-size:11px;color:#666;white-space:nowrap">facebook.com/</span>
-    <input type="text" placeholder="yourpage" style="border:none;background:transparent;padding:12px 10px 12px 0;flex:1;min-width:0;color:#fff">
-  </div>`;
-  lf.appendChild(div);
+// ===== EXAMPLES =====
+const EXAMPLES = [
+  {
+    name: "Chuck Zaagsma", type: "🚀 AutoRepHero", tagline: "Helping small businesses get more reviews, rank higher, and grow faster.",
+    phone: "(509) 818-0787", offer: "14-Day Free Trial",
+    avatar: "chuck.jpg",
+    socials: [
+      {name:"Facebook", url:"https://www.facebook.com/chuckzonline"},
+      {name:"LinkedIn", url:"https://www.linkedin.com/in/chuck-zaagsma/"},
+    ],
+    reviews: [],
+    links: [{label:"⚡ Rapid Reviews Demo ⚡", url:"https://app.autorephero.com"}, {label:"📞 Book a Call", url:"https://calendar.app.google/5F5ukx7i52L4YZqu6"}],
+    color: "#8b5cf6",
+  },
+  {
+    name: "Zeal Church", type: "⛪ Church", tagline: "His Presence. His Power. His People.",
+    phone: "(509) 607-7797", address: "159 S Lincoln St, Spokane, WA 99201", offer: "",
+    avatar: "zeal-logo.jpg",
+    details: ["🕐 Sundays at 11:30 AM", "📍 159 S Lincoln St, Spokane, WA"],
+    socials: [
+      {name:"Instagram", url:"https://www.instagram.com/zealchurch"},
+      {name:"Website", url:"https://www.zealchurchwa.com"},
+    ],
+    reviews: [],
+    links: [{label:"Service Times", url:"https://www.zealchurchwa.com"}, {label:"Give / Donate", url:"https://zeal-church-478146.churchcenter.com/giving"}, {label:"Become a Member", url:"https://zealchurch.churchconnectplatform.com/users/sign_in"}],
+    color: "#e65100",
+  },
+  {
+    name: "BrawnPro", type: "💪 SaaS", tagline: "The Muscle Behind Your Business.",
+    phone: "", offer: "14-Day Free Trial",
+    socials: [
+      {name:"Website", url:"https://brawnpro.com"},
+    ],
+    reviews: [],
+    links: [{label:"Start Free Trial", url:"https://brawnpro.com/signup"}, {label:"Features", url:"https://brawnpro.com"}],
+    color: "#22c55e",
+  },
+  {
+    name: "The King's Best™", type: "👑 Wellness", tagline: "Crafted for Kings. She'll Want It Too.",
+    phone: "", offer: "", emoji: "♛", emojiStyle: "font-size:36px;color:#d4af37",
+    cardBg: "linear-gradient(135deg, #1a1a2e 0%, #0d0d1a 100%)",
+    socials: [],
+    reviews: [],
+    links: [{label:"🛒 Shop Now", url:"https://thekingsbest.com"}, {label:"📖 Our Story", url:"https://thekingsbest.com/#story"}, {label:"❓ FAQ", url:"https://thekingsbest.com/#faq"}],
+    color: "#d4af37",
+  },
+  {
+    name: "Green Edge Landscaping", type: "🌿 Landscaping", tagline: "Professional lawn care & yard maintenance. Your yard, our passion.",
+    phone: "(509) 555-0123", address: "Spokane, WA", offer: "Free First Mow with Monthly Plan",
+    emoji: "🌿", emojiStyle: "font-size:36px",
+    cardBg: "linear-gradient(135deg, #14532d 0%, #052e16 100%)",
+    details: ["🕐 Mon–Sat 7am–6pm", "✅ Licensed & Insured"],
+    socials: [
+      {name:"Instagram", url:"#"},
+      {name:"Facebook", url:"#"},
+    ],
+    reviews: [],
+    links: [{label:"📋 Request a Free Quote", url:"#"}, {label:"⭐ Leave a Google Review", url:"#"}],
+    color: "#22c55e",
+    shopItems: [
+      { name: "Lawn Mowing", price: "$45–$85", img: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=200&h=150&fit=crop", desc: "Weekly or bi-weekly cuts" },
+      { name: "Spring Cleanup", price: "$150–$350", img: "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=200&h=150&fit=crop", desc: "Debris removal, edging & mulch" },
+      { name: "Sprinkler Startup", price: "$89", img: "https://images.unsplash.com/photo-1563089145-599997674d42?w=200&h=150&fit=crop", desc: "Turn on & inspect your system" },
+      { name: "Hedge Trimming", price: "$75–$200", img: "https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?w=200&h=150&fit=crop", desc: "Shrubs, hedges & shaping" },
+      { name: "Fertilization", price: "$65", img: "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=200&h=150&fit=crop", desc: "Seasonal lawn treatment" },
+      { name: "Fall Aeration", price: "$95–$175", img: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=200&h=150&fit=crop", desc: "Core aeration for healthier roots" },
+    ],
+  },
+  {
+    name: "Spotless Home Cleaning", type: "🏠 House Keeping", tagline: "Professional house cleaning & maid services. Reliable, trusted, detail-oriented.",
+    phone: "(509) 555-0456", address: "Spokane, WA", offer: "20% Off Your First Clean",
+    emoji: "🏠", emojiStyle: "font-size:36px",
+    cardBg: "linear-gradient(135deg, #1e3a5f 0%, #0d1b2a 100%)",
+    details: ["🕐 Mon–Sat 8am–5pm", "✅ Insured & Background Checked"],
+    socials: [
+      {name:"Instagram", url:"#"},
+      {name:"Facebook", url:"#"},
+    ],
+    reviews: [],
+    links: [{label:"📋 Book a Cleaning", url:"#"}, {label:"⭐ Leave a Google Review", url:"#"}],
+    color: "#3b82f6",
+    shopItems: [
+      { name: "Standard Cleaning", price: "$120–$180", img: "https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=200&h=150&fit=crop", desc: "Vacuum, mop, bathrooms & kitchen" },
+      { name: "Deep Clean", price: "$200–$350", img: "https://images.unsplash.com/photo-1563453392212-326f5e854473?w=200&h=150&fit=crop", desc: "Top-to-bottom thorough clean" },
+      { name: "Move In/Out", price: "$250–$400", img: "https://images.unsplash.com/photo-1584820927498-cfe5211fd8bf?w=200&h=150&fit=crop", desc: "Full clean for empty homes" },
+      { name: "Weekly Service", price: "From $95/visit", img: "https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=200&h=150&fit=crop", desc: "Recurring maintenance clean" },
+      { name: "Window Cleaning", price: "$75–$150", img: "https://images.unsplash.com/photo-1527515637462-cff94eecc1ac?w=200&h=150&fit=crop", desc: "Interior windows, streak-free" },
+      { name: "Fridge & Oven", price: "$45 each", img: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=200&h=150&fit=crop", desc: "Deep clean appliance add-on" },
+    ],
+  },
+];
+
+function showExamples() {
+  const overlay = document.createElement('div');
+  overlay.style.cssText = 'position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.9);backdrop-filter:blur(10px);display:flex;flex-direction:column';
+  overlay.onclick = (e) => { if (e.target === overlay) overlay.remove(); };
+
+  let html = `
+    <div style="padding:16px 20px;display:flex;justify-content:space-between;align-items:center">
+      <div style="font-size:16px;font-weight:800;color:#fff">👁 Examples</div>
+      <button onclick="this.closest('div[style]').parentElement.remove()" style="background:none;border:none;color:#888;font-size:24px;cursor:pointer;padding:4px">✕</button>
+    </div>
+    <div style="flex:1;overflow-x:auto;display:flex;gap:16px;padding:0 20px 20px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch">
+  `;
+
+  const socialIcons = {facebook:'📘',instagram:'📸',youtube:'▶️',tiktok:'🎵',linkedin:'💼',website:'🌐'};
+  EXAMPLES.forEach(ex => {
+    html += `
+      <div style="min-width:300px;max-width:340px;background:${ex.cardBg || 'var(--card)'};border-radius:20px;padding:24px;scroll-snap-align:center;flex-shrink:0">
+        <div style="text-align:center;margin-bottom:16px">
+          ${ex.avatar ? `<div style="position:relative;width:60px;height:60px;margin:0 auto 8px"><img src="${ex.avatar}" style="width:60px;height:60px;border-radius:50%;object-fit:cover;border:2px solid ${ex.color}"><div style="position:absolute;bottom:-2px;right:-2px;width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,#3b82f6,#1d4ed8);display:flex;align-items:center;justify-content:center;font-size:10px;border:2px solid var(--bg)">⚡</div></div>`
+          : ex.emoji ? `<div style="position:relative;width:60px;height:60px;margin:0 auto 8px"><div style="width:60px;height:60px;border-radius:50%;background:${ex.color}22;border:2px solid ${ex.color}66;display:flex;align-items:center;justify-content:center;${ex.emojiStyle || 'font-size:32px'}">${ex.emoji}</div><div style="position:absolute;bottom:-2px;right:-2px;width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,#3b82f6,#1d4ed8);display:flex;align-items:center;justify-content:center;font-size:10px;border:2px solid var(--bg)">⚡</div></div>`
+          : `<div style="width:60px;height:60px;border-radius:50%;background:${ex.color};display:flex;align-items:center;justify-content:center;margin:0 auto 8px;font-size:28px;box-shadow:0 4px 15px ${ex.color}44">⚡</div>`}
+          <div style="font-size:18px;font-weight:800">${ex.name}</div>
+          <div style="font-size:11px;color:var(--text3);margin-top:2px">${ex.type}</div>
+          <div style="font-size:12px;color:var(--text2);margin-top:4px">${ex.tagline}</div>
+        </div>
+        ${ex.phone ? `<div style="display:flex;justify-content:center;gap:12px;margin-bottom:16px">
+          <a href="tel:${ex.phone}" style="text-align:center;text-decoration:none;color:var(--text)"><div style="width:40px;height:40px;border-radius:50%;background:#2563eb;display:flex;align-items:center;justify-content:center;font-size:16px">📞</div><div style="font-size:9px;color:var(--text2);margin-top:2px">Call</div></a>
+          <a href="sms:${ex.phone}" style="text-align:center;text-decoration:none;color:var(--text)"><div style="width:40px;height:40px;border-radius:50%;background:#7c3aed;display:flex;align-items:center;justify-content:center;font-size:16px">💬</div><div style="font-size:9px;color:var(--text2);margin-top:2px">Text</div></a>
+          ${ex.address ? `<a href="https://maps.google.com/?q=${encodeURIComponent(ex.address)}" style="text-align:center;text-decoration:none;color:var(--text)">` : '<div style="text-align:center">'}<div style="width:40px;height:40px;border-radius:50%;background:#16a34a;display:flex;align-items:center;justify-content:center;font-size:16px">📍</div><div style="font-size:9px;color:var(--text2);margin-top:2px">Map</div>${ex.address ? '</a>' : '</div>'}
+        </div>` : ''}
+        ${ex.details ? `<div style="margin-bottom:12px;padding:0 4px">${ex.details.map(d => `<div style="font-size:12px;color:var(--text2);margin-bottom:4px">${d}</div>`).join('')}</div>` : ''}
+        ${ex.offer ? `<div style="background:${ex.color}15;border:1px solid ${ex.color}33;border-radius:12px;padding:14px;text-align:center;margin-bottom:12px">
+          <div style="font-size:14px;font-weight:800;color:${ex.color}">🎁 ${ex.offer} ⚡</div>
+        </div>` : ''}
+        ${ex.links && ex.links.length ? `<div style="margin-bottom:12px">
+          ${ex.links.map(l => `<a href="${l.url}" target="_blank" style="display:block;padding:10px 14px;background:${ex.color}22;border:1px solid ${ex.color}33;border-radius:10px;margin-bottom:4px;font-size:13px;font-weight:600;color:${ex.color};text-decoration:none;text-align:center">${l.label}</a>`).join('')}
+        </div>` : ''}
+        ${ex.socials.length ? `<div style="margin-bottom:12px">
+          <div style="font-size:11px;font-weight:700;color:var(--text3);margin-bottom:6px">📱 FOLLOW</div>
+          ${ex.socials.map(s => `<a href="${s.url}" target="_blank" style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--card2);border-radius:8px;margin-bottom:4px;font-size:12px;color:var(--text2);text-decoration:none">${socialIcons[s.name.toLowerCase()]||'🔗'} ${s.name}</a>`).join('')}
+        </div>` : ''}
+        ${ex.reviews.length ? `<div>
+          <div style="font-size:11px;font-weight:700;color:var(--text3);margin-bottom:6px">⭐ REVIEWS</div>
+          ${ex.reviews.map(r => `<a href="${r.url}" target="_blank" style="display:block;padding:8px 12px;background:var(--card2);border-radius:8px;margin-bottom:4px;font-size:12px;color:var(--text2);text-decoration:none">${r.name}</a>`).join('')}
+        </div>` : ''}
+        ${ex.shopItems && ex.shopItems.length ? `<div style="margin-top:12px">
+          <div style="font-size:11px;font-weight:700;color:var(--text3);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.5px">🛒 Services & Pricing</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+            ${ex.shopItems.map(item => `
+              <div style="background:var(--card2);border-radius:12px;overflow:hidden">
+                <img src="${item.img}" alt="${item.name}" style="width:100%;height:90px;object-fit:cover;display:block" loading="lazy" onerror="this.style.display='none'">
+                <div style="padding:8px 10px">
+                  <div style="font-size:12px;font-weight:700;color:var(--text);line-height:1.3">${item.name}</div>
+                  <div style="font-size:10px;color:var(--text3);margin-top:2px">${item.desc}</div>
+                  <div style="font-size:12px;font-weight:800;color:${ex.color};margin-top:5px">${item.price}</div>
+                </div>
+              </div>`).join('')}
+          </div>
+        </div>` : ''}
+        <div style="text-align:center;margin-top:12px;font-size:10px;color:#333">⚡ Powered by AutoRepHero</div>
+      </div>
+    `;
+  });
+
+  html += `</div><div style="text-align:center;padding:0 0 24px"><div style="font-size:11px;color:var(--text3)">← Swipe to browse →</div></div>`;
+  overlay.innerHTML = html;
+  document.body.appendChild(overlay);
 }
 
-function formatPhone(input) {
-  let v = input.value.replace(/\D/g, '');
-  if (v.length > 10) v = v.slice(0, 10);
-  if (v.length >= 7) input.value = '(' + v.slice(0,3) + ') ' + v.slice(3,6) + '-' + v.slice(6);
-  else if (v.length >= 4) input.value = '(' + v.slice(0,3) + ') ' + v.slice(3);
-  else if (v.length > 0) input.value = '(' + v;
-}
-
-const PLACES_KEY = 'AIzaSyBdLY6yPpNZFD7AB2dPECsznDNTFpiRuwU';
-let searchTimeout = null;
-
-function searchBizPlaces(q) {
-  var sr = document.getElementById('searchResults');
-  if (q.length < 3) { sr.classList.remove('active'); sr.innerHTML = ''; return; }
+// ===== GOOGLE PLACES SEARCH =====
+let searchTimeout;
+function searchBiz(q) {
+  const sr = document.getElementById('searchResults');
+  if (!sr || q.length < 3) { if(sr) { sr.style.display='none'; sr.innerHTML=''; } return; }
   clearTimeout(searchTimeout);
-  searchTimeout = setTimeout(function() {
+  searchTimeout = setTimeout(() => {
     fetch('/api/places?q=' + encodeURIComponent(q))
-      .then(function(r) { return r.json(); })
-      .then(function(data) {
+      .then(r => r.json())
+      .then(data => {
         if (data.predictions && data.predictions.length > 0) {
-          sr.innerHTML = data.predictions.slice(0, 5).map(function(p) {
-            return '<div class="search-result" onclick="selectPlace(\'' + p.place_id + '\')">' +
-              '<div class="sr-name">' + p.structured_formatting.main_text + '</div>' +
-              '<div class="sr-addr">' + (p.structured_formatting.secondary_text || '') + '</div></div>';
-          }).join('');
-          sr.classList.add('active');
-        } else { sr.classList.remove('active'); }
-      }).catch(function() { sr.classList.remove('active'); });
+          sr.innerHTML = data.predictions.slice(0,5).map(p =>
+            `<div style="padding:12px 16px;cursor:pointer;border-bottom:1px solid #222" onclick="selectPlace('${p.place_id}')" onmouseover="this.style.background='#252525'" onmouseout="this.style.background='transparent'">
+              <div style="font-size:14px;font-weight:600;color:var(--text)">${p.structured_formatting.main_text}</div>
+              <div style="font-size:11px;color:var(--text3)">${p.structured_formatting.secondary_text || ''}</div>
+            </div>`
+          ).join('');
+          sr.style.display = 'block';
+        } else { sr.style.display = 'none'; }
+      }).catch(() => { sr.style.display = 'none'; });
   }, 300);
 }
 
 function selectPlace(placeId) {
-  var sr = document.getElementById('searchResults');
-  sr.classList.remove('active');
+  const sr = document.getElementById('searchResults');
+  if (sr) sr.style.display = 'none';
   fetch('/api/places?placeId=' + placeId)
-    .then(function(r) { return r.json(); })
-    .then(function(data) {
+    .then(r => r.json())
+    .then(data => {
       if (data.result) {
-        var r = data.result;
-        document.getElementById('b_name').value = r.name || '';
-        document.getElementById('b_address').value = r.formatted_address || '';
-        document.getElementById('b_phone').value = r.formatted_phone_number || '';
-        document.getElementById('b_website').value = r.website || '';
-        var city = (r.address_components || []).find(function(c) { return c.types.includes('locality'); });
-        var state = (r.address_components || []).find(function(c) { return c.types.includes('administrative_area_level_1'); });
-        if (city && state) document.getElementById('b_title').value = city.long_name + ', ' + state.short_name;
-        var phoneInput = document.getElementById('b_phone');
-        if (phoneInput.value) formatPhone(phoneInput);
-        document.getElementById('bizSearch').value = r.name;
+        const r = data.result;
+        S.data.name = r.name || '';
+        S.data.address = r.formatted_address || '';
+        S.data.phone = r.formatted_phone_number || '';
+        S.data.website = r.website || '';
+        const city = (r.address_components || []).find(c => c.types.includes('locality'));
+        const state = (r.address_components || []).find(c => c.types.includes('administrative_area_level_1'));
+        if (city && state) S.data.tagline = city.long_name + ', ' + state.short_name;
+        render();
+        S.step = 0; // keep card section open
+        render();
       }
-    }).catch(function(e) { console.error('Place details error:', e); });
+    }).catch(e => console.error('Place details error:', e));
 }
 
-function fillFromSearch(el) {
-  document.getElementById('searchResults').classList.remove('active');
-}
-
-function updateBuilderType() {
-  const t = document.getElementById('b_type').value;
-  const nameLabel = document.querySelector('label[for="b_name"]') || document.getElementById('b_name').previousElementSibling;
-  if (t === 'church') nameLabel.textContent = 'Church / Organization Name';
-  else if (t === 'personal') nameLabel.textContent = 'Your Name';
-  else if (t === 'realtor') nameLabel.textContent = 'Your Name';
-  else nameLabel.textContent = 'Business Name';
-}
-
-const AI_OFFERS = {
-  plumber: { h: '$50 Off Any Plumbing Repair', v: '$50', s: 'off repairs over $200', d: 'Leaks, clogs, water heaters. Licensed & insured. Same-day service.' },
-  roofer: { h: 'Free Roof Inspection + 10% Off', v: 'FREE', s: 'inspection + 10% off repairs', d: 'We inspect at no charge. If repairs needed, save 10%.' },
-  auto: { h: '$25 Off Your Next Oil Change', v: '$25', s: 'off any oil change', d: 'Full synthetic included. Free multi-point inspection with every service.' },
-  carlot: { h: 'Free Vehicle History Report', v: 'FREE', s: 'Carfax report on any vehicle', d: 'No commitment. Know exactly what you are buying. Ask for your free report today.' },
-  restaurant: { h: 'Buy One Entree, Get One Free!', v: 'BOGO', s: 'free entree with purchase', d: 'Dine in only. Second entree of equal or lesser value.' },
-  salon: { h: '20% Off Your First Visit', v: '20%', s: 'off any service', d: 'Haircuts, color, styling. New clients only.' },
-  retail: { h: 'Buy 2, Get 1 Free!', v: 'B2G1', s: 'free item with purchase', d: 'Mix and match. Free item equal or lesser value.' },
-  realtor: { h: 'Free Home Value Report', v: 'FREE', s: 'market analysis', d: 'Find out what your home is worth. No obligation.' },
-  other: { h: '15% Off Your First Service', v: '15%', s: 'off first booking', d: 'We want to earn your business. Book today and save!' },
-};
-
-function aiOffer(type) {
-  const o = AI_OFFERS[type];
-  document.getElementById('b_offer_headline').value = o.h;
-  document.getElementById('b_offer_value').value = o.v;
-  document.getElementById('b_offer_sub').value = o.s;
-  document.getElementById('b_offer_desc').value = o.d;
-  document.getElementById('offerAIpicker').style.display = 'none';
-}
-
-function fillOffer(headline, value, sub) {
-  document.getElementById('b_offer_headline').value = headline;
-  document.getElementById('b_offer_value').value = value;
-  document.getElementById('b_offer_sub').value = sub;
-}
-
-function generateCard() {
-  const name = document.getElementById('b_name').value || 'My Rapid Business Card';
-  const title = document.getElementById('b_title').value || '';
-  const desc = document.getElementById('b_desc').value || '';
-  const phone = document.getElementById('b_phone').value || '';
-  const email = document.getElementById('b_email').value || '';
-  const address = document.getElementById('b_address').value || '';
-  const website = document.getElementById('b_website').value || '';
-  const type = document.getElementById('b_type').value;
-  
-  const typeIcons = { business: '🔧', church: '⛪', personal: '👤', realtor: '🏠' };
-  
-  // Build actions
-  const actions = [];
-  if (phone) actions.push({ icon: '📞', label: 'Call', href: 'tel:' + phone.replace(/\D/g,'').replace(/^(\d{10})$/,'+1$1') });
-  if (phone) actions.push({ icon: '💬', label: 'Text', href: 'sms:' + phone.replace(/\D/g,'').replace(/^(\d{10})$/,'+1$1') });
-  if (address) actions.push({ icon: '📍', label: 'Map', href: 'https://maps.google.com/?q=' + encodeURIComponent(address) });
-  if (email) actions.push({ icon: '📧', label: 'Email', href: 'mailto:' + email });
-  
-  // Build links from link fields
-  const linkEls = document.querySelectorAll('.link-field');
-  const linkStyles = {
-    facebook: { icon: '📘', bg: '#1e40af', label: 'Facebook', base: 'https://facebook.com/' },
-    instagram: { icon: '📸', bg: '#86198f', label: 'Instagram', base: 'https://instagram.com/' },
-    youtube: { icon: '▶️', bg: '#7c2d12', label: 'YouTube', base: 'https://youtube.com/' },
-    linkedin: { icon: '💼', bg: '#1e3a5f', label: 'LinkedIn', base: 'https://linkedin.com/in/' },
-    tiktok: { icon: '🎵', bg: '#111', label: 'TikTok', base: 'https://tiktok.com/@' },
-    google: { icon: '⭐', bg: '#854d0e', label: 'Google Reviews', base: '' },
-    yelp: { icon: '⭐', bg: '#af1b1b', label: 'Yelp', base: 'https://yelp.com/biz/' },
-    website: { icon: '🌐', bg: '#1e3a5f', label: 'Website', base: '' },
-    other: { icon: '🔗', bg: '#333', label: 'Link', base: '' },
-  };
-  const links = [];
-  linkEls.forEach(el => {
-    const selVal = el.querySelector('select').value;
-    const inputVal = el.querySelector('input').value.trim();
-    if (inputVal) {
-      const s = linkStyles[selVal] || linkStyles.other;
-      const fullUrl = ['google','website','other'].includes(selVal) ? (inputVal.startsWith('http') ? inputVal : 'https://' + inputVal) : s.base + inputVal;
-      const sub = fullUrl.replace(/https?:\/\/(www\.)?/,'').split('/').slice(0,2).join('/');
-      links.push({ icon: s.icon, bg: s.bg, label: s.label, sub: sub, href: fullUrl });
-    }
-  });
-  if (website && !links.find(l => l.href === website)) {
-    links.push({ icon: '🌐', bg: '#1e3a5f', label: 'Website', sub: website.replace(/https?:\/\/(www\.)?/,''), href: website });
-  }
-  
-  // Add offer link if filled in
-  const offerHeadline = document.getElementById('b_offer_headline').value.trim();
-  const offerValue = document.getElementById('b_offer_value').value.trim();
-  const offerSub = document.getElementById('b_offer_sub').value.trim();
-  if (offerHeadline) {
-    const offerSlug = name.toLowerCase().replace(/[^a-z0-9]+/g,'-') + '-offer';
-    links.unshift({ icon: '🎁', bg: '#166534', label: offerHeadline, sub: offerValue ? offerValue + ' ' + offerSub : 'Special offer', href: 'https://rbo.autorephero.com/' + offerSlug });
-  }
-
-  // Build details
-  const details = [];
-  if (address) details.push({ icon: '📍', text: address });
-  if (phone) details.push({ icon: '📞', text: phone });
-  if (email) details.push({ icon: '📧', text: email });
-  if (website) details.push({ icon: '🌐', text: website.replace(/https?:\/\/(www\.)?/,'') });
-  
-  // Darken theme color for cover
-  const hex = builderColor.replace('#','');
-  const r = Math.max(0, parseInt(hex.substr(0,2),16) - 100);
-  const g = Math.max(0, parseInt(hex.substr(2,2),16) - 100);
-  const b = Math.max(0, parseInt(hex.substr(4,2),16) - 100);
-  const dark = '#' + r.toString(16).padStart(2,'0') + g.toString(16).padStart(2,'0') + b.toString(16).padStart(2,'0');
-  
-  const slug = name.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
-  
-  const card = {
-    coverGradient: `linear-gradient(135deg, ${builderColor}44 0%, ${dark} 100%)`,
-    coverColor: dark,
-    avatar: typeIcons[type] || '🔧',
-    avatarType: 'icon',
-    name: name,
-    title: title,
-    tagline: desc,
-    themeColor: builderColor,
-    actions: actions,
-    links: links,
-    details: details,
-    url: 'https://rbc.autorephero.com/' + slug,
-    vcard: { fn: name, org: name, tel: phone.replace(/\D/g,'').replace(/^(\d{10})$/,'+1$1'), email: email, adr: address, url: website }
-  };
-  
-  // Show the card
-  document.getElementById('builder').classList.remove('active');
-  document.getElementById('cardContainer').style.display = 'flex';
-  renderCard(card);
-  // Scroll to the card
-  setTimeout(() => {
-    document.getElementById('cardContainer').scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }, 100);
-}
-
-// Init
-// Check for RBO offer params — auto-open builder with offer pre-filled
-(function() {
-  var p = new URLSearchParams(window.location.search);
-  if (p.has('builder')) {
-    // Open builder
-    setTimeout(function() {
-      showBuilder();
-      // Pre-fill business info if provided
-      if (p.get('biz')) document.getElementById('b_name').value = p.get('biz');
-      if (p.get('phone')) { document.getElementById('b_phone').value = p.get('phone'); formatPhone(document.getElementById('b_phone')); }
-      if (p.get('website')) document.getElementById('b_website').value = p.get('website');
-      // Pre-fill offer
-      if (p.get('offer_h')) {
-        document.getElementById('offerToggle').style.display = 'none';
-        document.getElementById('offerFields').style.display = 'block';
-        document.getElementById('b_offer_headline').value = p.get('offer_h') || '';
-        document.getElementById('b_offer_value').value = p.get('offer_v') || '';
-        document.getElementById('b_offer_sub').value = p.get('offer_s') || '';
-        document.getElementById('b_offer_desc').value = p.get('offer_d') || '';
-      }
-    }, 200);
-  } else {
-    renderCard(DEMOS.church);
-  }
-})();
+// ===== INIT =====
+render();
 </script>
 </body>
 </html>
